@@ -12,8 +12,8 @@ jobs: # a collection of steps
           JDBC_DATABASE_PASSWORD: qwerty00
 
       -image: circleci/postgres:9.6.5-alpine-ram # ...with this image you can add the postgres's database
-       environment:
-         POSTGRES_DB: book-shop # database's name
+        environment:
+          POSTGRES_DB: book-shop # database's name
 
 
     steps: # a collection of executable commands
