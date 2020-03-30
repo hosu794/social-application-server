@@ -45,7 +45,7 @@ jobs: # a collection of steps
   deploy:
     docker: # run the steps with Docker
       - image: circleci/buildpack-deps:trusty
-        steps:
+      steps:
         - checkout
         - run:
             name: Deploy app on the Heroku
