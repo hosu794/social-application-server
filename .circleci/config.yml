@@ -5,13 +5,13 @@ jobs:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
         environment:
-                JDBC_DATABASE_URL: jdbc:postgresql://localhost:5432/book-shop
-                JDBC_DATABASE_USERNAME: root
-                JDBC_DATABASE_PASSWORD: root
+          JDBC_DATABASE_URL: jdbc:postgresql://localhost:5432/book-shop
+          JDBC_DATABASE_USERNAME: root
+          JDBC_DATABASE_PASSWORD: root
 
       - image: circleci/postgres:9.6.5-alpine-ram
         environment:
-                POSTGRES_DB: book-shop
+          POSTGRES_DB: book-shop
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -42,5 +42,5 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
-      # run tests!
+            # run tests!
             - run: mvn test
