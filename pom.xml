@@ -8,6 +8,7 @@
 		<version>2.2.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	<packaging>jar</packaging>
 	<groupId>com.book-shop</groupId>
 	<artifactId>book-shop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -38,13 +39,11 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 
-
-
 		<!-- For Working with Json Web Tokens (JWT) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
-
+			<version>0.9.0</version>
 		</dependency>
 
 		<!-- For Java 8 Date/Time Support -->
