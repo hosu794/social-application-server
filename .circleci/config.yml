@@ -43,20 +43,18 @@ jobs: # a collection of steps
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
 
   deploy:
-    docker:
+    docker: # run the steps with Docker
+      - image: circleci/buildpack-deps:trusty # ...with this image as the primary container; this is where all `steps` will run
 
 
-      - image: circleci/buildpack-deps:trusty # image for the deploy to the Heroku
+    steps:
 
+      - checkout
 
-      steps:
-
-        - checkout
-
-        - run:
-            name: Deploy app on the Heroku
-            command: | # push command
-              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+      - run:
+          name: Deploy app on the Heroku
+          command: | # push command
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
 
 
 
@@ -67,9 +65,7 @@ workflows: # workflows for the project
 
 
     jobs:
-
-      - build
-
-      - deploy:
-          requires:
-            - build
+    - build
+    - deploy:
+        requires:
+        - build
