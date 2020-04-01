@@ -1,6 +1,11 @@
 version: 2 # use CircleCI 2.0
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
+    filters:
+      branches:
+        only:
+          - develop
+          - master
 
     working_directory: ~/book-shop # directory where steps will run
 
@@ -56,9 +61,6 @@ jobs: # a collection of steps
           name: Deploy app on the Heroku
           command: | # push command
             git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
-
-
-
 workflows: # workflows for the project
   version: 2
 
@@ -66,8 +68,7 @@ workflows: # workflows for the project
 
 
     jobs:
-    - build:
-    - deploy:
-        requires:
-        - build
-
+      - build
+      - deploy:
+          requires:
+            - build

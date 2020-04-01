@@ -11,14 +11,5 @@ public class HelloController {
         return "Hello Everyone!";
     }
 
-    @GetMapping("/twiceHello")
-    public String getTwiceHello() {
-        return "TwiceHello";
-    }
-
-    @GetMapping("/twirdHello")
-    public String getThirdeHello() {
-        return "TwirdHello";
-    }
 
 }
