@@ -6,9 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-    @GetMapping
+    @GetMapping("/hello")
     public String getHello() {
         return "Hello Everyone!";
+    }
+
+    @GetMapping("/twiceHello")
+    public String getTwiceHello() {
+        return "TwiceHello";
     }
 
 }
