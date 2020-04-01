@@ -13,8 +13,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 })
 public class BookShopApplication {
 
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(BookShopApplication.class, args);
 	}
