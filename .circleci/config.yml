@@ -71,7 +71,11 @@ workflows: # workflows for the project
 
 
     jobs:
-    - build
+    - build:
+        filters:
+          branches:
+            only:
+              - master
     - deploy:
         requires:
         - build
