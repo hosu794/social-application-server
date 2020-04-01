@@ -25,24 +25,8 @@ public class AuditingConfig {
 class SpringSecurityAuditAwareImpl implements AuditorAware<Long> {
 
 
-
-
     @Override
     public Optional<Long> getCurrentAuditor() {
-
-
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-//            return Optional.empty();
-//        }
-//
-//        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-//
-//        return Optional.ofNullable(userPrincipal.getId());
-
-
+        return Optional.empty();
     }
-
-
 }
