@@ -1,11 +1,6 @@
 version: 2 # use CircleCI 2.0
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
-    filters:
-      branches:
-        only:
-          - develop
-          - master
 
     working_directory: ~/book-shop # directory where steps will run
 
@@ -71,7 +66,10 @@ workflows: # workflows for the project
 
 
     jobs:
-    - build
-    - deploy:
-        requires:
-        - build
+      - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build
