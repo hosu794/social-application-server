@@ -67,7 +67,7 @@ workflows: # workflows for the project
 
     jobs:
     - build:
-        filters: #ALlow only the master branch to build and deploy ;)
+        filters:    #ALlow only the master branch to build and deploy ;)
           branches:
             only:
               - master
