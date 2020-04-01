@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.model;
 
 import com.bookshop.bookshop.model.audit.DateAudit;
+import com.bookshop.bookshop.model.audit.UserDateAudit;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "topics")
-public class Topic extends DateAudit {
+public class Topic extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

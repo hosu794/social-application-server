@@ -1,12 +1,13 @@
 package com.bookshop.bookshop.model;
 
 import com.bookshop.bookshop.model.audit.DateAudit;
+import com.bookshop.bookshop.model.audit.UserDateAudit;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "loves")
-public class Love extends DateAudit {
+public class Love extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

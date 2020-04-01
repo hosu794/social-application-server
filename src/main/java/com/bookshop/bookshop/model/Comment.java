@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.model;
 
 import com.bookshop.bookshop.model.audit.DateAudit;
+import com.bookshop.bookshop.model.audit.UserDateAudit;
 import org.hibernate.annotations.JoinColumnOrFormula;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "comments")
-public class Comment extends DateAudit {
+public class Comment extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +21,10 @@ public class Comment extends DateAudit {
     @NotEmpty(message = "*Please write something")
     private String body;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "story_id", referencedColumnName = "story_id", nullable = false)
     @NotNull
     private Story story;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    @NotNull
-    private User user;
 
     public Long getId() {
         return id;
@@ -54,11 +50,5 @@ public class Comment extends DateAudit {
         this.story = story;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

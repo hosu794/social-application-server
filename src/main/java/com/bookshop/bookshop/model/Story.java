@@ -1,16 +1,18 @@
 package com.bookshop.bookshop.model;
 
 import com.bookshop.bookshop.model.audit.DateAudit;
+import com.bookshop.bookshop.model.audit.UserDateAudit;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "stories")
-public class Story extends DateAudit {
+public class Story extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +27,23 @@ public class Story extends DateAudit {
     @Column(name = "body", columnDefinition = "TEXT")
     private String body;
 
-    @ManyToMany
+    @Column(name = "description", nullable = false)
+    @NotEmpty(message = "*Please provide the description")
+    private String description;
+
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     @NotNull
     private User user;
 
     @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
     private Collection<Comment> comments;
+
+    @Column(nullable = false)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "storie_topic", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "story_id"))
+    private List<Topic> topics;
+
 
     public Long getId() {
         return id;
