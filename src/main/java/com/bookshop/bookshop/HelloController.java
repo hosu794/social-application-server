@@ -16,4 +16,9 @@ public class HelloController {
         return "TwiceHello";
     }
 
+    @GetMapping("/twirdHello")
+    public String getThirdeHello() {
+        return "TwirdHello";
+    }
+
 }
