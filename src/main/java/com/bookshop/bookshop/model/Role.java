@@ -20,6 +20,8 @@ public class Role {
     @Column(length = 60)
     private RoleName name;
 
+    public Role() {}
+
     public Long getId() {
         return id;
     }
@@ -36,7 +38,7 @@ public class Role {
         this.name = name;
     }
 
-    public Role() {}
+
 
 
 }

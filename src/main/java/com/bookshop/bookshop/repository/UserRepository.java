@@ -1,4 +1,4 @@
-package com.bookshop.bookshop.model.repository;
+package com.bookshop.bookshop.repository;
 
 import com.bookshop.bookshop.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
-    List<User> findByUsernameOrEmail(String username, String email);
+    Optional<User> findByUsernameOrEmail(String username, String email);
 
     List<User> findByIdIn(List<Long> userIds);
 

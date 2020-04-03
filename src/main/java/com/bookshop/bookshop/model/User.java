@@ -1,59 +1,89 @@
 package com.bookshop.bookshop.model;
 
 import com.bookshop.bookshop.model.audit.DateAudit;
-import com.bookshop.bookshop.model.audit.UserDateAudit;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.boot.jaxb.hbm.internal.CacheAccessTypeConverter;
-import org.hibernate.validator.constraints.Length;
-
+import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "username"
+        }),
+        @UniqueConstraint(columnNames = {
+                "email"
+        })
+})
 public class User extends DateAudit {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", unique = true, nullable = false)
-    @Email(message = "*Please provide a valid Email")
-    @NotEmpty(message = "*Please provide an email")
-    private String email;
+    @NotBlank
+    @Size(max = 40)
+    private String name;
 
-    @Column(name = "password", nullable = false)
-    @Length(min = 5, message = "*Your password must have at least 5 characters")
-    @NotEmpty(message = "*Please provide your password")
-    @JsonIgnore
-    private String password;
-
-    @Column(name = "username")
-    @NotEmpty(message = "*Please provide your password")
+    @NotBlank
+    @Size(max = 15)
     private String username;
 
-    @Column(name = "lastname")
-    @NotEmpty(message = "*Pleases provide your lastname")
-    private String lastname;
+    @NaturalId
+    @NotBlank
+    @Size(max = 40)
+    @Email
+    private String email;
 
-    @Column(name = "active", nullable = false)
-    private int active;
+    @NotBlank
+    @Size(max = 100)
+    private String password;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Collection<Story> stories;
 
 
+    public User(Long id, @NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password, Set<Role> roles, Collection<Story> stories) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.stories = stories;
+    }
+
+    public Collection<Story> getStories() {
+        return stories;
+    }
+
+    public void setStories(Collection<Story> stories) {
+        this.stories = stories;
+    }
+
+    public User(Long id, @NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password, Set<Role> roles) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
     public User() {}
+
 
     public Long getId() {
         return id;
@@ -61,6 +91,22 @@ public class User extends DateAudit {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -79,30 +125,6 @@ public class User extends DateAudit {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public int getActive() {
-        return active;
-    }
-
-    public void setActive(int active) {
-        this.active = active;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
@@ -110,29 +132,10 @@ public class User extends DateAudit {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-    public Collection<Story> getStories() {
-        return stories;
-    }
-
-    public void setStories(Collection<Story> stories) {
-        this.stories = stories;
-    }
-
-    public int getTotalLovesCount() {
-        return totalLovesCount;
-    }
-
-    public void setTotalLovesCount(int totalLovesCount) {
-        this.totalLovesCount = totalLovesCount;
-    }
-
-    @Column(name = "user_loves")
-    private int totalLovesCount;
-
-
-
-
-
-
 }
+
+
+
+
+
+
