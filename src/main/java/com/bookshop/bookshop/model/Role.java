@@ -16,7 +16,6 @@ public class Role {
 
     @Enumerated(EnumType.STRING)
     @NaturalId
-    @NotEmpty(message = "*Please provide role name")
     @Column(length = 60)
     private RoleName name;
 

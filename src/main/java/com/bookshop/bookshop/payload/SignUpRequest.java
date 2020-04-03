@@ -22,7 +22,7 @@ public class SignUpRequest {
 
     @NotBlank
     @Size(min = 6, max = 20)
-    private String passaword;
+    private String password;
 
 
     public String getName() {
@@ -49,11 +49,11 @@ public class SignUpRequest {
         this.email = email;
     }
 
-    public String getPassaword() {
-        return passaword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassaword(String passaword) {
-        this.passaword = passaword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
