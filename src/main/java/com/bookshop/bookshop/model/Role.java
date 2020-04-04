@@ -8,18 +8,22 @@ import javax.validation.constraints.NotEmpty;
 @Entity
 @Table(name = "roles")
 public class Role {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Enumerated(EnumType.STRING)
     @NaturalId
     @Column(length = 60)
     private RoleName name;
 
-    public Role() {}
+    public Role() {
+
+    }
+
+    public Role(RoleName name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -36,8 +40,5 @@ public class Role {
     public void setName(RoleName name) {
         this.name = name;
     }
-
-
-
 
 }
