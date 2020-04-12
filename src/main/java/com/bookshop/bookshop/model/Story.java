@@ -2,11 +2,17 @@ package com.bookshop.bookshop.model;
 
 import com.bookshop.bookshop.model.audit.DateAudit;
 import com.bookshop.bookshop.model.audit.UserDateAudit;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,11 +37,6 @@ public class Story extends UserDateAudit {
     @NotEmpty(message = "*Please provide the description")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    @NotNull
-    private User user;
-
     @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
     private Collection<Comment> comments;
 
@@ -44,6 +45,32 @@ public class Story extends UserDateAudit {
     @JoinTable(name = "storie_topic", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "story_id"))
     private List<Topic> topics;
 
+    @NotNull
+    private Instant expirationDateTime;
+
+    public Instant getExpirationDateTime() {
+        return expirationDateTime;
+    }
+
+    public void setExpirationDateTime(Instant expirationDateTime) {
+        this.expirationDateTime = expirationDateTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Topic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
+    }
 
     public Long getId() {
         return id;
@@ -67,14 +94,6 @@ public class Story extends UserDateAudit {
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public Collection<Comment> getComments() {

@@ -6,8 +6,13 @@ import com.bookshop.bookshop.model.audit.UserDateAudit;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "loves")
-public class Love extends UserDateAudit {
+@Table(name = "loves", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "user_id",
+                "story_id"
+        })
+})
+public class Love extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +26,6 @@ public class Love extends UserDateAudit {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Love() {}
 
     public Long getId() {
         return id;

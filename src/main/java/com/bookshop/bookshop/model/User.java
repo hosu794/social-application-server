@@ -19,7 +19,6 @@ import java.util.Set;
 })
 public class User extends DateAudit {
 
-
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,19 +50,6 @@ public class User extends DateAudit {
     private Set<Role> roles = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Collection<Story> stories;
-
-
-    public User(Long id, @NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password, Set<Role> roles, Collection<Story> stories) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-        this.stories = stories;
-    }
 
     public User(String name, String username, String email, String password) {
         this.name = name;
@@ -72,13 +58,6 @@ public class User extends DateAudit {
         this.password = password;
     }
 
-    public Collection<Story> getStories() {
-        return stories;
-    }
-
-    public void setStories(Collection<Story> stories) {
-        this.stories = stories;
-    }
 
     public User(Long id, @NotBlank @Size(max = 40) String name, @NotBlank @Size(max = 15) String username, @NotBlank @Size(max = 40) @Email String email, @NotBlank @Size(max = 100) String password, Set<Role> roles) {
         this.id = id;
