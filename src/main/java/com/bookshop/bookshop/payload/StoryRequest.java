@@ -1,7 +1,7 @@
 package com.bookshop.bookshop.payload;
 
 import com.bookshop.bookshop.model.Love;
-import com.bookshop.bookshop.model.Topic;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -16,10 +16,6 @@ public class StoryRequest {
     private String body;
 
     private String description;
-
-    @NotNull
-    @Valid
-    private List<Topic> topics;
 
     public String getTitle() {
         return title;
@@ -45,11 +41,4 @@ public class StoryRequest {
         this.description = description;
     }
 
-    public List<Topic> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<Topic> topics) {
-        this.topics = topics;
-    }
 }

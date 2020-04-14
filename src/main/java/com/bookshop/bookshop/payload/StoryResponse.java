@@ -1,7 +1,6 @@
 package com.bookshop.bookshop.payload;
 
 import com.bookshop.bookshop.model.Comment;
-import com.bookshop.bookshop.model.Topic;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -14,8 +13,6 @@ public class StoryResponse {
     private String body;
     private String description;
     private Collection<Comment> comments;
-
-    private List<Topic> topics;
 
     private UserSummary createdBy;
     private Instant creationDateTime;
@@ -62,14 +59,6 @@ public class StoryResponse {
 
     public void setComments(Collection<Comment> comments) {
         this.comments = comments;
-    }
-
-    public List<Topic> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<Topic> topics) {
-        this.topics = topics;
     }
 
     public UserSummary getCreatedBy() {

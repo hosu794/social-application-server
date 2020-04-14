@@ -40,36 +40,12 @@ public class Story extends UserDateAudit {
     @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
     private Collection<Comment> comments;
 
-    @Column(nullable = false)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "storie_topic", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "story_id"))
-    private List<Topic> topics;
-
-    @NotNull
-    private Instant expirationDateTime;
-
-    public Instant getExpirationDateTime() {
-        return expirationDateTime;
-    }
-
-    public void setExpirationDateTime(Instant expirationDateTime) {
-        this.expirationDateTime = expirationDateTime;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Topic> getTopics() {
-        return topics;
-    }
-
-    public void setTopics(List<Topic> topics) {
-        this.topics = topics;
     }
 
     public Long getId() {

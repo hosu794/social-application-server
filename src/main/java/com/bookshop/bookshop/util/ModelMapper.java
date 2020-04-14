@@ -14,11 +14,9 @@ public class ModelMapper {
         storyResponse.setId(story.getId());
         storyResponse.setBody(story.getBody());
         storyResponse.setTitle(story.getTitle());
-        storyResponse.setTopics(story.getTopics());
-        storyResponse.setExpirationDateTime(story.getExpirationDateTime());
         storyResponse.setCreationDateTime(story.getCreatedAt());
+        storyResponse.setDescription(story.getDescription());
         Instant now = Instant.now();
-
         UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
         storyResponse.setCreatedBy(creatorSummary);
 
