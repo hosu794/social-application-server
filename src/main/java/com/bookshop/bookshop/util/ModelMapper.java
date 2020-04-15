@@ -16,13 +16,10 @@ public class ModelMapper {
         storyResponse.setTitle(story.getTitle());
         storyResponse.setCreationDateTime(story.getCreatedAt());
         storyResponse.setDescription(story.getDescription());
-        Instant now = Instant.now();
         UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
         storyResponse.setCreatedBy(creatorSummary);
+        storyResponse.setTotalLoves(userLove);
 
-        if(userLove != null) {
-            storyResponse.setTotalLoves(userLove);
-        }
 
         return storyResponse;
 

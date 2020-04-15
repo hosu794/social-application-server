@@ -15,12 +15,17 @@ import java.util.List;
 @Repository
 public interface LoveRepository extends JpaRepository<Love, Long> {
 
+    @Query("SELECT NEW com.bookshop.bookshop.model.StoryLoveCount(v.story.id, count(v.id)) FROM Love v WHERE v.story.id = :storyIds GROUP BY v.story.id")
+    List<StoryLoveCount> countByStoryIdInGroupByStoryId(@Param("storyIds") List<Long> storyIds);
+
+    @Query("SELECT NEW com.bookshop.bookshop.model.StoryLoveCount(v.story.id, count(v.id)) FROM Love v WHERE v.story.id = :storyId GROUP BY v.story.id")
+    List<StoryLoveCount> countByStoryIdGroupByStoryId(@Param("storyId") Long storyId);
+
+    @Query("SELECT count(*) FROM Love v WHERE v.story.id = :storyId")
+    long countByStoryId(@Param("storyId") Long storyId);
 
     @Query("SELECT v FROM Love v where v.user.id = :userId and v.story.id in :storyIds")
     List<Love> findByUserIdAndStoryIdIn(@Param("userId") Long userId, @Param("storyIds") List<Long> storyIds);
-
-    @Query("SELECT NEW com.bookshop.bookshop.model.StoryLoveCount(v.story.id, count(v.id)) FROM Love v WHERE v.story.id = :storyId")
-    List<StoryLoveCount> countByStory(@Param("storyId") Long storyId);
 
     @Query("SELECT v FROM Love v where v.user.id = :userId and v.story.id in :storyId")
     Love findByUserIdAndStoryId(@Param("userId") Long userId, @Param("storyId") Long storyId);
@@ -30,7 +35,5 @@ public interface LoveRepository extends JpaRepository<Love, Long> {
 
     @Query("SELECT v.story.id FROM Love v where v.user.id = :userId")
     Page<Long> findLoveStoryIdsByUserId(@Param("userId") Long userId, Pageable pageable);
-
-
 
 }

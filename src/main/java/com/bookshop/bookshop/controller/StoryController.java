@@ -65,8 +65,8 @@ public class StoryController {
 
     @PostMapping("/{storyId}/loves")
     @PreAuthorize("hasRole('USER')")
-    public StoryResponse castLove(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId, @Valid @RequestBody LoveRequest loveRequest) {
-        return storyService.castLoveAndGetUpadateStory(storyId, loveRequest, currentUser);
+    public StoryResponse castLove(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId) {
+        return storyService.castLoveAndGetUpadateStory(storyId, currentUser);
     }
 
 

@@ -63,8 +63,11 @@ public class StoryService {
         Map<Long, User> creatorMap = getStoryCreatorMap(stories.getContent());
 
         List<StoryResponse> storyResponses = stories.map(story -> {
+            long userLoveCount = loveRepository.countByStoryId(story.getId());
+            System.out.println(userLoveCount);
+
             return ModelMapper.mapStoryToStoryResponse(story, creatorMap.get(story.getCreatedBy())
-                    , storyUserLoveMap == null ? null : storyUserLoveMap.getOrDefault(story.getId(), null));
+                    , userLoveCount);
         }).getContent();
 
         return new PagedResponse<>(storyResponses, stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
@@ -89,7 +92,8 @@ public class StoryService {
         Map<Long, Long> storyUserLoveMap = getStoryUserLoveMap(currentUser, storyIds);
 
         List<StoryResponse> storyResponses = stories.map(story -> {
-            return ModelMapper.mapStoryToStoryResponse(story, user, storyUserLoveMap == null ? null : storyUserLoveMap.getOrDefault(story.getId(), null));
+            long userLoveCount = loveRepository.countByStoryId(story.getId());
+            return ModelMapper.mapStoryToStoryResponse(story, user, userLoveCount);
         }).getContent();
 
 
@@ -122,8 +126,11 @@ public class StoryService {
         Map<Long, User> creatorMap = getStoryCreatorMap(stories);
 
         List<StoryResponse> storyResposes = stories.stream().map(story -> {
+
+            long userLoveCount = loveRepository.countByUserId(story.getId());
+
             return ModelMapper.mapStoryToStoryResponse(story
-                    , creatorMap.get(story.getCreatedBy()), storyUserLoveMap == null ? null : storyUserLoveMap.getOrDefault(story.getId(), null));
+                    , creatorMap.get(story.getCreatedBy()), storyUserLoveMap == null ? null : storyUserLoveMap.getOrDefault(story.getId(), userLoveCount));
         }).collect(Collectors.toList());
 
         return new PagedResponse<>(storyResposes, userLovedStoryIds.getNumber(), userLovedStoryIds.getSize(), userLovedStoryIds.getTotalElements(), userLovedStoryIds.getTotalPages(), userLovedStoryIds.isLast());
@@ -146,7 +153,7 @@ public class StoryService {
 
 
         //Retrieve Love Counts of every story
-        List<StoryLoveCount> loves = loveRepository.countByStory(storyId);
+        List<StoryLoveCount> loves = loveRepository.countByStoryIdGroupByStoryId(storyId);
 
         Map<Long, Long> storyLovesMap = loves.stream()
                 .collect(Collectors.toMap(StoryLoveCount::getStoryId, StoryLoveCount::getLoveCount));
@@ -161,11 +168,13 @@ public class StoryService {
             userLove = loveRepository.findByUserIdAndStoryId(currentUser.getId(), storyId);
         }
 
-        return ModelMapper.mapStoryToStoryResponse(story, creator, userLove != null ? userLove.getStory().getId(): null);
+        long totalLoves = loveRepository.countByStoryId(storyId);
+
+        return ModelMapper.mapStoryToStoryResponse(story, creator, totalLoves);
 
     }
 
-    public StoryResponse castLoveAndGetUpadateStory(Long storyId, LoveRequest loveRequest, UserPrincipal currentUser) {
+    public StoryResponse castLoveAndGetUpadateStory(Long storyId, UserPrincipal currentUser) {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Story", "id", storyId));
 
@@ -185,7 +194,7 @@ public class StoryService {
 
         // - Love Saved, Return the updated Story Response now
 
-        List<StoryLoveCount> loves = loveRepository.countByStory(storyId);
+        List<StoryLoveCount> loves = loveRepository.countByStoryIdGroupByStoryId(storyId);
 
         Map<Long, Long> storyLovesMap = loves.stream().collect(Collectors.toMap(StoryLoveCount::getStoryId, StoryLoveCount::getLoveCount));
 
@@ -193,7 +202,9 @@ public class StoryService {
         User creator = userRepository.findById(story.getCreatedBy())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
 
-        return ModelMapper.mapStoryToStoryResponse(story, creator, love.getStory().getId());
+        long totalLoves = loveRepository.countByStoryId(storyId);
+
+        return ModelMapper.mapStoryToStoryResponse(story, creator, totalLoves);
 
     }
 
@@ -240,4 +251,5 @@ public class StoryService {
 
         return storyUserLoveMap;
    }
+
 }
