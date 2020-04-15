@@ -59,7 +59,6 @@ public class StoryService {
         }
 
         List<Long> storiesIds = stories.map(Story::getId).getContent();
-        Map<Long, Long> storyUserLoveMap = getStoryUserLoveMap(currentUser, storiesIds);
         Map<Long, User> creatorMap = getStoryCreatorMap(stories.getContent());
 
         List<StoryResponse> storyResponses = stories.map(story -> {
@@ -151,13 +150,6 @@ public class StoryService {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Poll", "id", storyId));
 
-
-        //Retrieve Love Counts of every story
-        List<StoryLoveCount> loves = loveRepository.countByStoryIdGroupByStoryId(storyId);
-
-        Map<Long, Long> storyLovesMap = loves.stream()
-                .collect(Collectors.toMap(StoryLoveCount::getStoryId, StoryLoveCount::getLoveCount));
-
         //Retrieve story creator details
         User creator = userRepository.findById(story.getCreatedBy())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
@@ -191,12 +183,6 @@ public class StoryService {
             logger.info("User {} has already loved in Story {}", currentUser.getId(), storyId);
             throw new BadRequestException("Sorry! You hae already cast your love in this story");
         }
-
-        // - Love Saved, Return the updated Story Response now
-
-        List<StoryLoveCount> loves = loveRepository.countByStoryIdGroupByStoryId(storyId);
-
-        Map<Long, Long> storyLovesMap = loves.stream().collect(Collectors.toMap(StoryLoveCount::getStoryId, StoryLoveCount::getLoveCount));
 
         //Retrieve story creator details
         User creator = userRepository.findById(story.getCreatedBy())
