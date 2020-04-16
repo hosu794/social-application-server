@@ -4,9 +4,7 @@ import com.bookshop.bookshop.exception.BadRequestException;
 import com.bookshop.bookshop.exception.ResourceNotFoundException;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
-import com.bookshop.bookshop.model.StoryLoveCount;
 import com.bookshop.bookshop.model.User;
-import com.bookshop.bookshop.payload.LoveRequest;
 import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 import com.bookshop.bookshop.payload.StoryResponse;
@@ -26,13 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Id;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class StoryService {

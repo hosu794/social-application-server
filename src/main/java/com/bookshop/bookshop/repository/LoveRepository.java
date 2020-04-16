@@ -1,8 +1,6 @@
 package com.bookshop.bookshop.repository;
 
 import com.bookshop.bookshop.model.Love;
-import com.bookshop.bookshop.model.Story;
-import com.bookshop.bookshop.model.StoryLoveCount;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,12 +12,6 @@ import java.util.List;
 
 @Repository
 public interface LoveRepository extends JpaRepository<Love, Long> {
-
-    @Query("SELECT NEW com.bookshop.bookshop.model.StoryLoveCount(v.story.id, count(v.id)) FROM Love v WHERE v.story.id = :storyIds GROUP BY v.story.id")
-    List<StoryLoveCount> countByStoryIdInGroupByStoryId(@Param("storyIds") List<Long> storyIds);
-
-    @Query("SELECT NEW com.bookshop.bookshop.model.StoryLoveCount(v.story.id, count(v.id)) FROM Love v WHERE v.story.id = :storyId GROUP BY v.story.id")
-    List<StoryLoveCount> countByStoryIdGroupByStoryId(@Param("storyId") Long storyId);
 
     @Query("SELECT count(*) FROM Love v WHERE v.story.id = :storyId")
     long countByStoryId(@Param("storyId") Long storyId);
