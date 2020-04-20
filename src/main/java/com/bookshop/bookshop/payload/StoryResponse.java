@@ -16,8 +16,6 @@ public class StoryResponse {
 
     private UserSummary createdBy;
     private Instant creationDateTime;
-    private Instant expirationDateTime;
-    private Boolean isExpired;
 
     private Long totalLoves;
 
@@ -75,22 +73,6 @@ public class StoryResponse {
 
     public void setCreationDateTime(Instant creationDateTime) {
         this.creationDateTime = creationDateTime;
-    }
-
-    public Instant getExpirationDateTime() {
-        return expirationDateTime;
-    }
-
-    public void setExpirationDateTime(Instant expirationDateTime) {
-        this.expirationDateTime = expirationDateTime;
-    }
-
-    public Boolean getExpired() {
-        return isExpired;
-    }
-
-    public void setExpired(Boolean expired) {
-        isExpired = expired;
     }
 
     public Long getTotalLoves() {

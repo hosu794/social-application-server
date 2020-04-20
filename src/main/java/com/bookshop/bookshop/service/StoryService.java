@@ -14,6 +14,7 @@ import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.util.AppConstants;
 import com.bookshop.bookshop.util.ModelMapper;
+import com.bookshop.bookshop.util.ValidatePageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class StoryService {
     private static final Logger logger = LoggerFactory.getLogger(StoryService.class);
 
     public PagedResponse<StoryResponse> getAllStories(UserPrincipal currentUser, int page, int size) {
-        validatePageNumberAndSize(page, size);
+        ValidatePageUtil.validatePageNumberAndSize(page, size);
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Story> stories = storyRepository.findAll(pageable);
@@ -52,12 +53,11 @@ public class StoryService {
             return new PagedResponse<>(Collections.emptyList(), stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
         }
 
-        List<Long> storiesIds = stories.map(Story::getId).getContent();
+        
         Map<Long, User> creatorMap = getStoryCreatorMap(stories.getContent());
 
         List<StoryResponse> storyResponses = stories.map(story -> {
             long userLoveCount = loveRepository.countByStoryId(story.getId());
-            System.out.println(userLoveCount);
 
             return ModelMapper.mapStoryToStoryResponse(story, creatorMap.get(story.getCreatedBy())
                     , userLoveCount);
@@ -67,7 +67,7 @@ public class StoryService {
     }
 
     public PagedResponse<StoryResponse> getStoriesCreatedBy(String username, UserPrincipal currentUser, int page, int size) {
-        validatePageNumberAndSize(page, size);
+        ValidatePageUtil.validatePageNumberAndSize(page, size);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
@@ -95,7 +95,7 @@ public class StoryService {
     }
 
     public PagedResponse<StoryResponse> getStoriesLovedBy(String username, UserPrincipal currentUser, int page, int size) {
-        validatePageNumberAndSize(page, size);
+        ValidatePageUtil.validatePageNumberAndSize(page, size);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
@@ -188,15 +188,6 @@ public class StoryService {
 
     }
 
-    private void validatePageNumberAndSize(int page, int size) {
-        if(page < 0) {
-            throw new BadRequestException("Page number cannot be less than zero");
-        }
-
-        if(size > AppConstants.MAX_PAGE_SIZE) {
-            throw new BadRequestException("Page size must not be greater than " + AppConstants.MAX_PAGE_SIZE);
-        }
-    }
 
     //Retrieve Story Creator details of the given list of stories
     Map<Long, User> getStoryCreatorMap(List<Story> stories) {
