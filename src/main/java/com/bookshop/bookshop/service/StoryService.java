@@ -4,12 +4,14 @@ import com.bookshop.bookshop.exception.BadRequestException;
 import com.bookshop.bookshop.exception.ResourceNotFoundException;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
+import com.bookshop.bookshop.model.Topic;
 import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 import com.bookshop.bookshop.payload.StoryResponse;
 import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
+import com.bookshop.bookshop.repository.TopicRepository;
 import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.util.AppConstants;
@@ -41,6 +43,9 @@ public class StoryService {
     @Autowired
     private LoveRepository loveRepository;
 
+    @Autowired
+    private TopicRepository topicRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(StoryService.class);
 
     public PagedResponse<StoryResponse> getAllStories(UserPrincipal currentUser, int page, int size) {
@@ -53,7 +58,7 @@ public class StoryService {
             return new PagedResponse<>(Collections.emptyList(), stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
         }
 
-        
+
         Map<Long, User> creatorMap = getStoryCreatorMap(stories.getContent());
 
         List<StoryResponse> storyResponses = stories.map(story -> {
@@ -129,8 +134,13 @@ public class StoryService {
         return new PagedResponse<>(storyResposes, userLovedStoryIds.getNumber(), userLovedStoryIds.getSize(), userLovedStoryIds.getTotalElements(), userLovedStoryIds.getTotalPages(), userLovedStoryIds.isLast());
     }
 
-    public Story createStory(StoryRequest storyRequest) {
+    public Story createStory(StoryRequest storyRequest, Long topicId) {
+
+        Topic topic = topicRepository.findById(topicId)
+                .orElseThrow(() -> new ResourceNotFoundException("Topic", "id", topicId));
+
         Story story = new Story();
+        story.setTopic(topic);
         story.setBody(storyRequest.getBody());
         story.setDescription(storyRequest.getDescription());
         story.setTitle(storyRequest.getTitle());
@@ -188,6 +198,36 @@ public class StoryService {
 
     }
 
+    public PagedResponse<StoryResponse> getStoryByTopicId(Long topicId, UserPrincipal currentUser,  int page, int size) {
+        ValidatePageUtil.validatePageNumberAndSize(page, size);
+
+        Topic topic = topicRepository.findById(topicId)
+                .orElseThrow(() -> new ResourceNotFoundException("Topic", "id", topicId));
+
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Story> stories = storyRepository.findByTopicId(topic.getId(), pageable);
+
+        if(stories.getNumberOfElements() == 0) {
+            return new PagedResponse<>(Collections.emptyList(), stories.getNumber(), stories.getSize(), stories.getTotalElements(),stories.getTotalPages(), stories.isLast());
+        }
+
+        List<Long> storyIds = stories.map(Story::getId).getContent();
+
+        Map<Long, Long> storyUserLoveMap = getStoryUserLoveMap(currentUser, storyIds);
+
+        List<StoryResponse> storyResponses = stories.map(story -> {
+
+            User user = userRepository.findById(story.getCreatedBy())
+                    .orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
+
+            long userLoveCount = loveRepository.countByStoryId(story.getId());
+            return ModelMapper.mapStoryToStoryResponse(story, user, userLoveCount);
+        }).getContent();
+
+        return new PagedResponse<>(storyResponses, stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
+
+    }
 
     //Retrieve Story Creator details of the given list of stories
     Map<Long, User> getStoryCreatorMap(List<Story> stories) {

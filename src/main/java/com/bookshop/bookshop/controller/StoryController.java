@@ -45,10 +45,10 @@ public class StoryController {
         return storyService.getAllStories(currentUser, page, size);
     }
 
-    @PostMapping
+    @PostMapping("/topics/{topicId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createStory(@Valid @RequestBody StoryRequest storyRequest) {
-        Story story = storyService.createStory(storyRequest);
+    public ResponseEntity<?> createStory(@Valid @RequestBody StoryRequest storyRequest, @PathVariable Long topicId) {
+        Story story = storyService.createStory(storyRequest, topicId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{storyId}")
@@ -61,6 +61,13 @@ public class StoryController {
     @GetMapping("/{storyId}")
     public StoryResponse getStoryById(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId) {
         return storyService.getStoryById(storyId, currentUser);
+    }
+
+    @GetMapping("/topics/{topicId}")
+    public PagedResponse<StoryResponse> getStoryByTopicId(@PathVariable Long topicId, @CurrentUser UserPrincipal currentUser,
+                                                          @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                          @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return storyService.getStoryByTopicId(topicId, currentUser, page, size);
     }
 
     @PostMapping("/{storyId}/loves")

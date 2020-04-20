@@ -23,4 +23,6 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
 
     List<Story> findByIdIn(List<Long> pollIds, Sort sort);
 
+    Page<Story> findByTopicId(Long topicId, Pageable pageable);
+
 }

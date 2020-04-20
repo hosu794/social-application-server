@@ -40,6 +40,20 @@ public class Story extends UserDateAudit {
     @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
     private Collection<Comment> comments;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "topic_id", nullable = false)
+    private Topic topic;
+
+    public Story() {}
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+    }
+
     public String getDescription() {
         return description;
     }

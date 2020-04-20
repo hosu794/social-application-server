@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.payload;
 
 import com.bookshop.bookshop.model.Comment;
+import com.bookshop.bookshop.model.Topic;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -16,6 +17,8 @@ public class StoryResponse {
 
     private UserSummary createdBy;
     private Instant creationDateTime;
+
+    private TopicResponse topic;
 
     private Long totalLoves;
 
@@ -81,5 +84,13 @@ public class StoryResponse {
 
     public void setTotalLoves(Long totalLoves) {
         this.totalLoves = totalLoves;
+    }
+
+    public TopicResponse getTopic() {
+        return topic;
+    }
+
+    public void setTopic(TopicResponse topic) {
+        this.topic = topic;
     }
 }
