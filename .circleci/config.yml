@@ -33,8 +33,8 @@ jobs: # a collection of steps
       - run: mvn dependency:go-offline # gets the project dependencies
 
       - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client-9.5
       - run: whoami
+      - run: psql -d $POSTGRES_USER -c $POSTGRES_USER
 
       - save_cache: # saves the project dependencies
           paths:
