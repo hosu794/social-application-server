@@ -34,10 +34,12 @@ jobs: # a collection of steps
 
       - run: sudo apt install -y postgresql-client || true
 
-      // Make psql database
-      - run: psql -h localhost -p 5432 -c "book-shop" -U postgres
+      - run:
+          name: Create database
+          command: | #create postgresql database
+            psql -h localhost -p 5432 -c "book-shop" -U postgres
 
-        
+
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
