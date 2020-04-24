@@ -32,12 +32,20 @@ jobs: # a collection of steps
 
       - run: mvn dependency:go-offline # gets the project dependencies
 
+      - run: sudo apt install -y postgresql-client || true
+
+      // Make psql database
+      - run:
+          name: Create the database
+          command: |
+            psql -h localhost -p 5432 -c "book-shop" -U postgres
+
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
           key: book-shop-{{ checksum "pom.xml" }}
 
-      - run: mvn integration-test # run the actual tests
+      - run: mvn package # run the actual tests
 
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
           # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
