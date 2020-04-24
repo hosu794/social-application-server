@@ -33,8 +33,7 @@ jobs: # a collection of steps
       - run: mvn dependency:go-offline # gets the project dependencies
 
       - run: sudo apt-get update
-      - run: whoami
-      - run: psql -d $POSTGRES_USER -c "book-shop" -h localhost -p 5432
+      - run: sudo apt-get install -y postgresql-client-9.5
 
       - save_cache: # saves the project dependencies
           paths:
