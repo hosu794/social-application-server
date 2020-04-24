@@ -34,7 +34,7 @@ jobs: # a collection of steps
 
       - run: sudo apt-get update
       - run: whoami
-      - run: psql -d $POSTGRES_USER -c $POSTGRES_USER
+      - run: psql -d $POSTGRES_USER -c "book-shop" -h localhost -p 5432
 
       - save_cache: # saves the project dependencies
           paths:
