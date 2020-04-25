@@ -8,6 +8,7 @@ import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.CurrentUser;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
+import com.bookshop.bookshop.service.StoryServiceImpl;
 import com.bookshop.bookshop.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class StoryController {
     private UserRepository userRepository;
 
     @Autowired
-    private StoryService storyService;
+    private StoryServiceImpl storyService;
 
     private static final Logger logger = LoggerFactory.getLogger(StoryController.class);
 
@@ -73,7 +74,7 @@ public class StoryController {
     @PostMapping("/{storyId}/loves")
     @PreAuthorize("hasRole('USER')")
     public StoryResponse castLove(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId) {
-        return storyService.castLoveAndGetUpadateStory(storyId, currentUser);
+        return storyService.castLoveAndGetUpdateStory(storyId, currentUser);
     }
 
 
