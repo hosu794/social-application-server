@@ -12,9 +12,9 @@ jobs: # a collection of steps
     docker: # run the steps with Docker
       - image: circleci/openjdk:8-jdk-stretch # ...with this image as the primary container; this is where all `steps` will run
         environment: # database's environment
-          JDBC_DATABASE_URL: jdbc:postgresql://localhost:5432/book-shop
+          JDBC_DATABASE_URL: jdbc:postgresql://localhost:5432/bookshop
           JDBC_DATABASE_USERNAME: postgres
-          JDBC_DATABASE_PASSWORD: qwerty00
+          JDBC_DATABASE_PASSWORD: password
 
       - image: circleci/postgres:9.5-alpine-ram        # ...with this image you can add the postgres's database
         environment:
@@ -33,18 +33,11 @@ jobs: # a collection of steps
       - run: mvn dependency:go-offline # gets the project dependencies
 
       - run: sudo apt-get update
-      - run: sudo apt-get install -y postgresql-client
-      - run: sudo psql -U postgres -h localhost -p 5432 -c "create database bookshop;" # create database
 
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
           key: book-shop-{{ checksum "pom.xml" }}
-
-      - run:
-          name: Run tests
-          command: | # run actual tests
-            mvn package
 
       - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
           # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
