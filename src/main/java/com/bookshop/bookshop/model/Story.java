@@ -44,7 +44,24 @@ public class Story extends UserDateAudit {
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
+    public Story(@Length(min = 5, message = "*Your title must at least 5 characters") @NotEmpty(message = "*Please provide title") String title,
+                 String body, @NotEmpty(message = "*Please provide the description") String description, Topic topic) {
+        this.title = title;
+        this.body = body;
+        this.description = description;
+        this.topic = topic;
+    }
+
+    public Story(@Length(min = 5, message = "*Your title must at least 5 characters") @NotEmpty(message = "*Please provide title") String title,
+                 String body, @NotEmpty(message = "*Please provide the description") String description) {
+        this.title = title;
+        this.body = body;
+        this.description = description;
+    }
+
     public Story() {}
+
+
 
     public Topic getTopic() {
         return topic;

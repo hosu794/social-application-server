@@ -26,6 +26,12 @@ public class Love extends DateAudit {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Love(Story story, User user) {
+        this.story = story;
+        this.user = user;
+    }
+
+    public Love() {}
 
     public Long getId() {
         return id;

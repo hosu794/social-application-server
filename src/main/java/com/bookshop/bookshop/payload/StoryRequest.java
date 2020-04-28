@@ -17,6 +17,12 @@ public class StoryRequest {
 
     private String description;
 
+    public StoryRequest(String title, String body, String description) {
+        this.title = title;
+        this.body = body;
+        this.description = description;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -40,5 +46,6 @@ public class StoryRequest {
     public void setDescription(String description) {
         this.description = description;
     }
+
 
 }
