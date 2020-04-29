@@ -22,7 +22,6 @@ public class ModelMapper {
         UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
         storyResponse.setCreatedBy(creatorSummary);
         storyResponse.setTotalLoves(userLove);
-
         TopicResponse topicResponse = ModelMapper.mapTopicToTopicResponse(story.getTopic(), creator);
         storyResponse.setTopic(topicResponse);
 

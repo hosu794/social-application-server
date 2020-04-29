@@ -28,94 +28,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Service
-public class TopicService {
+public interface TopicService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TopicService.class);
+    public PagedResponse<TopicResponse> getAllTopics(UserPrincipal currentUser, int page, int size);
 
-    @Autowired
-    private TopicRepository topicRepository;
+    public PagedResponse<TopicResponse> getTopicByCreatedBy(String username, UserPrincipal currentUser, int page, int size);
 
-    @Autowired
-    private UserRepository userRepository;
+    public Topic createTopic(TopicRequest topicRequest);
 
-    public PagedResponse<TopicResponse> getAllTopics(UserPrincipal currentUser, int page, int size) {
-        ValidatePageUtil.validatePageNumberAndSize(page, size);
-
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Topic> topics = topicRepository.findAll(pageable);
-
-        if(topics.getNumberOfElements() == 0) {
-            return new PagedResponse<>(Collections.emptyList(), topics.getNumber(), topics.getSize(), topics.getTotalElements(), topics.getTotalPages(), topics.isLast());
-        }
-
-        Map<Long, User> creatorMap = getStoryCreatorMap(topics.getContent());
-
-        List<TopicResponse> topicResponses = topics.map(topic -> {
-
-            return ModelMapper.mapTopicToTopicResponse(topic, creatorMap.get(topic.getCreatedBy()));
-        }).getContent();
-
-        return new PagedResponse<>(topicResponses, topics.getNumber(), topics.getSize(), topics.getTotalElements(), topics.getTotalPages(), topics.isLast());
-    }
-
-    public PagedResponse<TopicResponse> getTopicByCreatedBy(String username, UserPrincipal currentUser, int page, int size) {
-        ValidatePageUtil.validatePageNumberAndSize(page, size);
-
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("User","username", username));
+    public TopicResponse getTopicById(Long topicId, UserPrincipal currentUser);
 
 
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Topic> topics = topicRepository.findAll(pageable);
-
-        if(topics.getNumberOfElements() == 0) {
-            return new PagedResponse<>(Collections.emptyList(), topics.getNumber(), topics.getSize(), topics.getTotalElements(), topics.getTotalPages(), topics.isLast());
-        }
-
-        List<TopicResponse> topicResponses = topics.map(topic -> {
-
-            return ModelMapper.mapTopicToTopicResponse(topic, user);
-        }).getContent();
-
-        return new PagedResponse<>(topicResponses, topics.getNumber(), topics.getSize(), topics.getTotalElements(), topics.getTotalPages(), topics.isLast());
-
-    }
-
-    public Topic createTopic(TopicRequest topicRequest) {
-        Topic topic = new Topic();
-        topic.setTitle(topicRequest.getTitle());
-        topic.setDescription(topicRequest.getDescription());
-
-        return topicRepository.save(topic);
-    }
-
-    public TopicResponse getTopicById(Long topicId, UserPrincipal currentUser) {
-        Topic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new ResourceNotFoundException("Topic", "id", topicId));
-
-        User creator = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User",  "id", currentUser.getId()));
-
-        return ModelMapper.mapTopicToTopicResponse(topic, creator);
-    }
-
-    //Retrieve Topic Creator details of the given list of topics
-    Map<Long, User> getStoryCreatorMap(List<Topic> topics) {
-
-
-        List<Long> creatorIds = topics.stream()
-                .map(Topic::getCreatedBy)
-                .distinct()
-                .collect(Collectors.toList());
-
-        List<User> creators = userRepository.findByIdIn(creatorIds);
-
-        Map<Long, User> creatorMap = creators.stream()
-                .collect(Collectors.toMap(User::getId, Function.identity()));
-
-        return creatorMap;
-
-    }
 
 }

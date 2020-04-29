@@ -7,6 +7,7 @@ import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 import com.bookshop.bookshop.payload.StoryResponse;
+import com.bookshop.bookshop.payload.UserSummary;
 import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
 import com.bookshop.bookshop.repository.TopicRepository;
@@ -20,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -41,7 +43,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class StoryControllerTest {
+public class StoryServiceTest {
 
 
     StoryRepository storyRepository = mock(StoryRepository.class);
@@ -90,61 +92,168 @@ public class StoryControllerTest {
     public void should_return_getAllStories_method() throws Exception {
 
 
-        User user = new User((long) 1, "Alibanana", "alibana123", "alibanana@gmail.com", "password");
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
-        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
-        Page<Story> stories = Mockito.mock(Page.class);
-        when(storyRepository.findAll(isA(Pageable.class))).thenReturn(stories);
-        Assert.assertNotNull(storyService.getAllStories(userPrincipal, 0, 30).getContent());
-        Assert.assertEquals(0, storyService.getAllStories(userPrincipal, 0, 30).getPage());
-        Assert.assertEquals(0, storyService.getAllStories(userPrincipal, 0, 30).getSize());
-        Assert.assertEquals(0, storyService.getAllStories(userPrincipal, 0, 30).getTotalElement());
-        Assert.assertEquals(0, storyService.getAllStories(userPrincipal, 0, 30).getTotalPages());
-        Assert.assertEquals(false, storyService.getAllStories(userPrincipal, 0, 30).isLast());
-
-
-
-    }
-
-    @Test
-    public void should_return_getStoriesCreatedBy_method() throws Exception {
-        User user = new User((long) 2, "Antek Pierdoła", "pierdoła123", "pierdoła@gmail.com", "password");
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
-        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
-        Page<Story> stories = Mockito.mock(Page.class);
-        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
-        when(storyRepository.findByCreatedBy(any(Long.class), isA(Pageable.class))).thenReturn(stories);
-        Assert.assertEquals(0, storyService.getStoriesCreatedBy(user.getUsername(), userPrincipal, 0, 30).getPage());
-        Assert.assertEquals(false, storyService.getStoriesCreatedBy(user.getUsername(), userPrincipal, 0, 30).isLast());
-        Assert.assertEquals(0, storyService.getStoriesCreatedBy(user.getUsername(), userPrincipal, 0, 30).getTotalPages());
-        Assert.assertEquals(0, storyService.getStoriesCreatedBy(user.getUsername(), userPrincipal, 0, 30).getSize());
-    }
-
-    /*
-
-    @Test
-    public void should_return_getStoriesLovedBy_method() throws Exception {
         Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
-        Topic topic  = new Topic("Topic Name", "Topic Description");
+        Topic topic  = new Topic();
+        topic.setDescription("Topic Description");
+        topic.setTitle("Topic Title");
         topic.setCreatedAt(createdAt);
         topic.setUpdatedAt(createdAt);
         topic.setId((long) 123);
         topic.setCreatedBy((long) 12);
         topic.setCreatedAt(createdAt);
         topic.setUpdatedAt(createdAt);
-        Story story = new Story("dasdasdasd", "dsadasdsad", "dsadasdasgf a rt er ");
 
+        User user = new User();
+        user.setId((long) 12);
+        user.setPassword("password");
+        user.setEmail("email@dsadasda.dsad");
+        user.setName("nanemadsad");
+        user.setUsername("sdad");
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+
+        Story story = new Story();
+        story.setDescription("Story Description");
+        story.setTitle("Story Title");
+        story.setTopic(topic);
         story.setCreatedBy((long) 123);
         story.setId((long) 333);
         story.setTopic(topic);
+        story.setCreatedBy(user.getId());
         story.setUpdatedAt(createdAt);
         story.setCreatedAt(createdAt);
 
 
-        User user = new User((long ) 3232332,"John Doe", "johndoe123", "joedoe@gmail.com", "password");
+        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        List<Story> storiesList = new ArrayList<>();
+        storiesList.add(story);
+        List<Long> listOfLoves = new ArrayList<>();
+        listOfLoves.add((long) 53412);
+        listOfLoves.add((long) 1323232);
+        listOfLoves.add((long) 13434);
+        int total = storiesList.size();
+        int start = Math.toIntExact(pageable.getOffset());
+        int end = Math.min(start + pageable.getPageSize(), total);
+
+
+        List<Story> output = new ArrayList<>();
+        output = storiesList.subList(start, end);
+        PageImpl page = new PageImpl<>(output, pageable, total);
+
+        List<User> users = new ArrayList<>();
+        users.add(user);
+
+
+        Mockito.when(storyRepository.findAll(ArgumentMatchers.isA(Pageable.class))).thenReturn(page);
+        Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
+        Mockito.when(loveRepository.countByStoryId(ArgumentMatchers.any(Long.class))).thenReturn(user.getId());
+        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,30).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,30).getContent().get(0).getDescription().contains(story.getDescription()));
+        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,30).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
+
+
+    }
+
+    @Test
+    public void should_return_getStoriesCreatedBy_method() throws Exception {
+
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        Topic topic  = new Topic();
+        topic.setDescription("Topic Description");
+        topic.setTitle("Topic Title");
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+        topic.setId((long) 123);
+        topic.setCreatedBy((long) 12);
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+
+        User user = new User();
+        user.setId((long) 12);
+        user.setPassword("password");
+        user.setEmail("email@dsadasda.dsad");
+        user.setName("nanemadsad");
+        user.setUsername("sdad");
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+
+        Story story = new Story();
+        story.setDescription("Story Description");
+        story.setTitle("Story Title");
+        story.setTopic(topic);
+        story.setCreatedBy((long) 123);
+        story.setId((long) 333);
+        story.setTopic(topic);
+        story.setCreatedBy(user.getId());
+        story.setUpdatedAt(createdAt);
+        story.setCreatedAt(createdAt);
+
+
+        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        List<Story> storiesList = new ArrayList<>();
+        storiesList.add(story);
+        List<Long> listOfLoves = new ArrayList<>();
+        listOfLoves.add((long) 53412);
+        listOfLoves.add((long) 1323232);
+        listOfLoves.add((long) 13434);
+        int total = storiesList.size();
+        int start = Math.toIntExact(pageable.getOffset());
+        int end = Math.min(start + pageable.getPageSize(), total);
+
+
+        List<Story> output = new ArrayList<>();
+        output = storiesList.subList(start, end);
+        PageImpl page = new PageImpl<>(output, pageable, total);
+
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+        when(storyRepository.findByCreatedBy(any(Long.class), isA(Pageable.class))).thenReturn(page);
+        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getDescription().contains(story.getDescription()));
+        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
+        Assert.assertNotNull(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getCreatedBy());
+
+    }
+
+
+    @Test
+    public void should_return_getStoriesLovedBy_method() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        Topic topic  = new Topic();
+        topic.setDescription("Topic Description");
+        topic.setTitle("Topic Title");
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+        topic.setId((long) 123);
+        topic.setCreatedBy((long) 12);
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+
+        User user = new User();
+        user.setId((long) 12);
+        user.setPassword("password");
+        user.setEmail("email@dsadasda.dsad");
+        user.setName("nanemadsad");
+        user.setUsername("sdad");
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         user.setCreatedAt(createdAt);
         user.setUpdatedAt(createdAt);
+
+        Story story = new Story();
+        story.setDescription("Story Description");
+        story.setTitle("Story Title");
+        story.setTopic(topic);
+        story.setCreatedBy((long) 123);
+        story.setId((long) 333);
+        story.setTopic(topic);
+        story.setCreatedBy(user.getId());
+        story.setUpdatedAt(createdAt);
+        story.setCreatedAt(createdAt);
 
         Love love = new Love(story, user);
         love.setId(new Random().nextLong());
@@ -162,28 +271,29 @@ public class StoryControllerTest {
         int total = listOfLoves.size();
         int start = Math.toIntExact(pageable.getOffset());
         int end = Math.min(start + pageable.getPageSize(), total);
+        List<Love> loves = new ArrayList<>();
+        loves.add(love);
 
         List<Long> output = new ArrayList<>();
         output = listOfLoves.subList(start, end);
         PageImpl page = new PageImpl<>(output, pageable, total);
-        List<Love> loves = new ArrayList<>();
-        loves.add(love);
+
         List<User> users = new ArrayList<>();
         users.add(user);
 
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
         when(loveRepository.findLoveStoryIdsByUserId(any(Long.class), isA(Pageable.class))).thenReturn(page);
-        when(storyRepository.findByIdIn(any(List.class), isA(Sort.class))).thenReturn(storiesList);
-        when(loveRepository.countByUserId(any(Long.class))).thenReturn((story.getId()));
+        when(storyRepository.findByIdIn(any(List.class), any(Sort.class))).thenReturn(storiesList);
         when(loveRepository.findByUserIdAndStoryIdIn(any(Long.class), any(List.class))).thenReturn(loves);
         when(userRepository.findByIdIn(any(List.class))).thenReturn(users);
-        Assert.assertNotNull(storyService.getStoriesLovedBy(user.getUsername(), userPrincipal, 0, 30));
-
+        when(loveRepository.countByUserId(any(Long.class))).thenReturn(topic.getId());
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getDescription().contains(story.getDescription()));
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
 
     }
 
-
-     */
     @Test
     public void should_return_create_method() throws Exception {
         Topic topic  = new Topic("Topic Name", "Topic Description");
