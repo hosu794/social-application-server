@@ -4,10 +4,9 @@ import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.Topic;
 import com.bookshop.bookshop.model.User;
-import com.bookshop.bookshop.payload.PagedResponse;
+
 import com.bookshop.bookshop.payload.StoryRequest;
-import com.bookshop.bookshop.payload.StoryResponse;
-import com.bookshop.bookshop.payload.UserSummary;
+
 import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
 import com.bookshop.bookshop.repository.TopicRepository;
@@ -15,24 +14,20 @@ import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
 import com.bookshop.bookshop.service.StoryServiceImpl;
-import com.bookshop.bookshop.util.AppConstants;
-import com.sun.org.apache.xpath.internal.Arg;
-import org.hibernate.query.criteria.internal.expression.SimpleCaseExpression;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
+
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
-import org.springframework.security.core.parameters.P;
 
-import javax.swing.text.html.Option;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.data.domain.*;
+
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
@@ -220,7 +215,6 @@ public class StoryServiceTest {
         Assert.assertNotNull(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getCreatedBy());
 
     }
-
 
     @Test
     public void should_return_getStoriesLovedBy_method() throws Exception {
