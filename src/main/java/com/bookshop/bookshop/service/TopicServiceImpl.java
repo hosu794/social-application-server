@@ -53,7 +53,7 @@ public class TopicServiceImpl implements TopicService {
             return new PagedResponse<>(Collections.emptyList(), topics.getNumber(), topics.getSize(), topics.getTotalElements(), topics.getTotalPages(), topics.isLast());
         }
 
-        Map<Long, User> creatorMap = getStoryCreatorMap(topics.getContent());
+        Map<Long, User> creatorMap = getTopicCreatorMap(topics.getContent());
 
         List<TopicResponse> topicResponses = topics.map(topic -> {
 
@@ -105,7 +105,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     //Retrieve Topic Creator details of the given list of topics
-    public Map<Long, User> getStoryCreatorMap(List<Topic> topics) {
+    public Map<Long, User> getTopicCreatorMap(List<Topic> topics) {
 
 
         List<Long> creatorIds = topics.stream()

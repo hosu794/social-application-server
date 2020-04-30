@@ -1,10 +1,17 @@
 package com.bookshop.bookshop.service;
 
+import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
+import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 import com.bookshop.bookshop.payload.StoryResponse;
 import com.bookshop.bookshop.security.UserPrincipal;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public interface StoryService {
 
@@ -22,5 +29,8 @@ public interface StoryService {
 
     public PagedResponse<StoryResponse> getStoryByTopicId(Long topicId, UserPrincipal currentUser, int page, int size);
 
+    public Map<Long, User> getStoryCreatorMap(List<Story> stories);
+
+    public Map<Long, Long> getStoryUserLoveMap(UserPrincipal currentUser, List<Long> storyIds);
 
 }

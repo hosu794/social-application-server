@@ -237,7 +237,7 @@ public class StoryServiceImpl implements StoryService {
     }
 
     //Retrieve Story Creator details of the given list of stories
-    Map<Long, User> getStoryCreatorMap(List<Story> stories) {
+    public Map<Long, User> getStoryCreatorMap(List<Story> stories) {
 
 
         List<Long> creatorIds = stories.stream()
@@ -255,7 +255,7 @@ public class StoryServiceImpl implements StoryService {
     }
 
     //Retrieve current user's storyIds
-    private Map<Long, Long> getStoryUserLoveMap(UserPrincipal currentUser, List<Long> storyIds) {
+    public Map<Long, Long> getStoryUserLoveMap(UserPrincipal currentUser, List<Long> storyIds) {
 
         Map<Long, Long> storyUserLoveMap = null;
 

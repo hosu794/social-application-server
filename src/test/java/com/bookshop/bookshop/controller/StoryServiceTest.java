@@ -16,6 +16,7 @@ import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
 import com.bookshop.bookshop.service.StoryServiceImpl;
 import com.bookshop.bookshop.util.AppConstants;
+import com.sun.org.apache.xpath.internal.Arg;
 import org.hibernate.query.criteria.internal.expression.SimpleCaseExpression;
 import org.junit.Assert;
 import org.junit.Test;
@@ -377,6 +378,120 @@ public class StoryServiceTest {
         Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getContent().get(0).getTitle().contains(story.getTitle()));
         Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
         Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
+
+
+    }
+
+    @Test
+    public void should_return_getStoryCreatorMap() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setUsername("hosu794");
+        user.setName("Grzegorz Szczęsny");
+        user.setEmail("grzesszesny14@gmail.com");
+        user.setId((long) 12432);
+        user.setUpdatedAt(createdAt);
+        user.setCreatedAt(createdAt);
+
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+        Topic topic = new Topic();
+        topic.setCreatedBy(user.getId());
+        topic.setCreatedAt(createdAt);
+        topic.setTitle("Title of the topic");
+        topic.setUpdatedAt(createdAt);
+        topic.setCreatedAt(createdAt);
+        topic.setDescription("Description");
+        topic.setId((long) 23422434);
+
+        Story story = new Story();
+        story.setCreatedBy(user.getId());
+        story.setCreatedAt(createdAt);
+        story.setUpdatedAt(createdAt);
+        story.setTitle("Title of the story");
+        story.setDescription("Description of the story");
+        story.setId((long) 233);
+        story.setBody("Body");
+        story.setTopic(topic);
+
+        List<Story> stories = new ArrayList<>();
+        stories.add(story);
+
+        List<User> users  = new ArrayList<>();
+        users.add(user);
+
+        Map<Long, User> creatorMap = new HashMap<>();
+        creatorMap.put(user.getId(), user);
+
+        Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
+
+        Assert.assertEquals(creatorMap.size(), storyService.getStoryCreatorMap(stories).size());
+        Assert.assertEquals(creatorMap.get(0), storyService.getStoryCreatorMap(stories).get(0));
+        Assert.assertEquals(creatorMap, storyService.getStoryCreatorMap(stories));
+
+    }
+
+    @Test
+    public void should_return_getStoryUserLoveMap() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setUsername("hosu794");
+        user.setName("Grzegorz Szczęsny");
+        user.setEmail("grzesszesny14@gmail.com");
+        user.setId((long) 12432);
+        user.setUpdatedAt(createdAt);
+        user.setCreatedAt(createdAt);
+
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+        Topic topic = new Topic();
+        topic.setCreatedBy(user.getId());
+        topic.setCreatedAt(createdAt);
+        topic.setTitle("Title of the topic");
+        topic.setUpdatedAt(createdAt);
+        topic.setCreatedAt(createdAt);
+        topic.setDescription("Description");
+        topic.setId((long) 23422434);
+
+        Story story = new Story();
+        story.setCreatedBy(user.getId());
+        story.setCreatedAt(createdAt);
+        story.setUpdatedAt(createdAt);
+        story.setTitle("Title of the story");
+        story.setDescription("Description of the story");
+        story.setId((long) 233);
+        story.setBody("Body");
+        story.setTopic(topic);
+
+        Love love1 = new Love();
+        love1.setUser(user);
+        love1.setStory(story);
+        love1.setId((long) 1221);
+
+        List<Love> loves = new ArrayList<>();
+        loves.add(love1);
+
+        List<Long> longs = new ArrayList<>();
+        longs.add(love1.getId());
+
+        Map<Long, Long> storyUserLoveMap = new HashMap<>();
+        storyUserLoveMap.put(love1.getStory().getId(), love1.getId());
+
+        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+
+
+        int total = loves.size();
+        int start = Math.toIntExact(pageable.getOffset());
+        int end = Math.min(start + pageable.getPageSize(), total);
+        List<Love> loveArrayList = new ArrayList<>();
+        loveArrayList.add(love1);
+
+        List<Love> output = new ArrayList<>();
+        output = loveArrayList.subList(start, end);
+        PageImpl page = new PageImpl<>(output, pageable, total);
+
+
+        Assert.assertEquals(storyUserLoveMap.get(0), storyService.getStoryUserLoveMap(userPrincipal, longs).get(0));
 
 
     }

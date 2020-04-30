@@ -38,6 +38,7 @@ public interface TopicService {
 
     public TopicResponse getTopicById(Long topicId, UserPrincipal currentUser);
 
+    public Map<Long, User> getTopicCreatorMap(List<Topic> topics);
 
 
 }

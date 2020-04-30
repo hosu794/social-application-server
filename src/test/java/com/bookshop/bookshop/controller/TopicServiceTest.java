@@ -26,6 +26,8 @@ import javax.swing.text.html.Option;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -180,67 +182,46 @@ public class TopicServiceTest {
         Assert.assertNotNull(topicService.createTopic(topicRequest));
     }
 
-
-    /*
     @Test
-    public void should_return_story_creator_map() throws Exception {
-
+    public void should_return_getStoryCreatorMap() throws Exception {
         Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
         User user = new User();
-        user.setId((long) 12);
         user.setUsername("hosu794");
-        user.setPassword("password");
         user.setName("Grzegorz Szczęsny");
-        user.setEmail("hosu794@gmail.com");
-        user.setCreatedAt(createdAt);
+        user.setEmail("grzesszesny14@gmail.com");
+        user.setId((long) 12432);
         user.setUpdatedAt(createdAt);
+        user.setCreatedAt(createdAt);
 
-        User user2 = new User();
-        user2.setId((long) 2333);
-        user2.setUsername("hosu794");
-        user2.setPassword("password");
-        user2.setName("Grzegorz Szczęsny");
-        user2.setEmail("hosu794@gmail.com");
-        user2.setCreatedAt(createdAt);
-        user2.setUpdatedAt(createdAt);
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
 
-        List<User> users = new ArrayList<>();
-        users.add(user);
-        users.add(user2);
-
-        Topic topic1 = new Topic();
-        topic1.setId((long) 12);
-        topic1.setTitle("New Title");
-        topic1.setDescription("New Description");
-        topic1.setCreatedBy(user.getId());
-        topic1.setCreatedAt(createdAt);
-        topic1.setUpdatedAt(createdAt);
-
-        Topic topic2 = new Topic();
-        topic2.setId((long) 32323);
-        topic2.setTitle("New Title");
-        topic2.setDescription("New Description");
-        topic2.setUpdatedAt(createdAt);
-        topic2.setCreatedAt(createdAt);
-        topic2.setCreatedBy(user2.getId());
+        Topic topic = new Topic();
+        topic.setCreatedBy(user.getId());
+        topic.setCreatedAt(createdAt);
+        topic.setTitle("Title of the topic");
+        topic.setUpdatedAt(createdAt);
+        topic.setCreatedAt(createdAt);
+        topic.setDescription("Description");
 
         List<Topic> topics = new ArrayList<>();
-        topics.add(topic1);
-        topics.add(topic2);
+        topics.add(topic);
 
-        Map<Long, User> creators = new HashMap<Long, User>();
-        creators.put(user.getId(), user);
-        creators.put(user2.getId(), user2);
+        List<User> users  = new ArrayList<>();
+        users.add(user);
 
-        TopicServiceImpl topicService = new TopicServiceImpl();
+        Map<Long, User> creatorMap = new HashMap<>();
+        creatorMap.put(user.getId(), user);
 
         Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
-        Assert.assertEquals(creators, topicService.getStoryCreatorMap(topics));
+
+        Assert.assertEquals(creatorMap.size(), topicService.getTopicCreatorMap(topics).size());
+        Assert.assertEquals(creatorMap.get(0), topicService.getTopicCreatorMap(topics).get(0));
+        Assert.assertEquals(creatorMap, topicService.getTopicCreatorMap(topics));
+
 
     }
 
 
-     */
     private PageImpl createMockPage(List<Topic> list) {
         PageRequest pageRequest = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
         int total = list.size();
