@@ -33,6 +33,7 @@ public class TopicServiceImpl implements TopicService {
 
     private static final Logger logger = LoggerFactory.getLogger(TopicServiceImpl.class);
 
+    @Autowired
     public TopicServiceImpl(TopicRepository topicRepository, UserRepository userRepository) {
         this.topicRepository = topicRepository;
         this.userRepository = userRepository;

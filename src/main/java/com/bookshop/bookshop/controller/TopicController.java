@@ -8,6 +8,7 @@ import com.bookshop.bookshop.payload.TopicResponse;
 import com.bookshop.bookshop.security.CurrentUser;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.TopicService;
+import com.bookshop.bookshop.service.TopicServiceImpl;
 import com.bookshop.bookshop.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class TopicController {
     private static final Logger logger = LoggerFactory.getLogger(TopicController.class);
 
     @Autowired
-    private TopicService topicService;
+    private TopicServiceImpl topicService;
 
     @GetMapping
     public PagedResponse<TopicResponse> getAllTopics(@CurrentUser UserPrincipal currentUser,

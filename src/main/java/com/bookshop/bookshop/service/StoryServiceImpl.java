@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 @Service
 public class StoryServiceImpl implements StoryService {
 
+    @Autowired
     public StoryServiceImpl(StoryRepository storyRepository, UserRepository userRepository, LoveRepository loveRepository,
                             TopicRepository topicRepository) {
 
