@@ -108,6 +108,8 @@ public class AuthenticationServiceTest {
 
         Authentication authentication = Mockito.mock(Authentication.class);
 
+
+
         Mockito.when(authenticationManager.authenticate(ArgumentMatchers.any())).thenReturn(authentication);
 
         Mockito.when(jwtTokenProvider.generateToken(ArgumentMatchers.any(Authentication.class))).thenReturn(generateMockToken(secret, mockExpirationTime, userPrincipal));
