@@ -13,7 +13,7 @@ import com.bookshop.bookshop.repository.TopicRepository;
 import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
-import com.bookshop.bookshop.service.StoryServiceImpl;
+import com.bookshop.bookshop.service.implementation.StoryServiceImpl;
 
 import org.junit.Assert;
 import org.junit.Test;

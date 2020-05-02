@@ -7,7 +7,7 @@ import com.bookshop.bookshop.repository.TopicRepository;
 import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.TopicService;
-import com.bookshop.bookshop.service.TopicServiceImpl;
+import com.bookshop.bookshop.service.implementation.TopicServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
