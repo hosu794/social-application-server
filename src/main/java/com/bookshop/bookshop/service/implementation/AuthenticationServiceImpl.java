@@ -49,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
 
-        System.out.println("Auth1");
+
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -58,11 +58,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 )
         );
 
-        System.out.println("Auth1");
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        System.out.println("Auth1");
+
 
         String jwt = jwtTokenProvider.generateToken(authentication);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
