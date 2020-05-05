@@ -80,9 +80,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/api/auth/**", "api/stories", "/api/stories/" , "/api/story/{storyId}")
+                .antMatchers("/api/auth/**")
                 .permitAll()
                 .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
+                .permitAll()
+                .antMatchers("/api/stories", "/api/stories/{storyId}")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
