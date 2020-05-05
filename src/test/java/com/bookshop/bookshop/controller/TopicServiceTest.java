@@ -61,19 +61,19 @@ public class TopicServiceTest {
         List<Topic> topics = new ArrayList<>();
         topics.add(topic1);
 
-        Pageable pageable = PageRequest.of(0, 30 , Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, 10 , Sort.Direction.DESC, "createdAt");
         PageImpl<Topic> topicPage = createMockPage(topics);
 
         Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
         Mockito.when(topicRepository.findAll(ArgumentMatchers.isA(Pageable.class))).thenReturn(topicPage);
-        Assert.assertTrue(topicService.getAllTopics(userPrincipal, 0, 30).getContent().get(0).getDescription().contains(topic1.getDescription()));
-        Assert.assertTrue(topicService.getAllTopics(userPrincipal, 0, 30).getContent().get(0).getTitle().contains(topic1.getTitle()));
-        Assert.assertEquals(1, topicService.getAllTopics(userPrincipal, 0, 30).getContent().size());
-        Assert.assertEquals(0, topicService.getAllTopics(userPrincipal, 0, 30).getPage());
-        Assert.assertEquals(1, topicService.getAllTopics(userPrincipal, 0, 30).getTotalElement());
-        Assert.assertEquals(1, topicService.getAllTopics(userPrincipal, 0, 30).getTotalPages());
-        Assert.assertEquals(true, topicService.getAllTopics(userPrincipal, 0, 30).isLast());
-        Assert.assertEquals(30, topicService.getAllTopics(userPrincipal, 0, 30).getSize());
+        Assert.assertTrue(topicService.getAllTopics(userPrincipal, 0, 10).getContent().get(0).getDescription().contains(topic1.getDescription()));
+        Assert.assertTrue(topicService.getAllTopics(userPrincipal, 0, 10).getContent().get(0).getTitle().contains(topic1.getTitle()));
+        Assert.assertEquals(1, topicService.getAllTopics(userPrincipal, 0, 10).getContent().size());
+        Assert.assertEquals(0, topicService.getAllTopics(userPrincipal, 0, 10).getPage());
+        Assert.assertEquals(1, topicService.getAllTopics(userPrincipal, 0, 10).getTotalElement());
+        Assert.assertEquals(1, topicService.getAllTopics(userPrincipal, 0, 10).getTotalPages());
+        Assert.assertEquals(true, topicService.getAllTopics(userPrincipal, 0, 10).isLast());
+        Assert.assertEquals(10, topicService.getAllTopics(userPrincipal, 0, 10).getSize());
     }
 
     @Test
@@ -103,15 +103,15 @@ public class TopicServiceTest {
         List<Topic> topics = new ArrayList<>();
         topics.add(topic1);
 
-        Pageable pageable = PageRequest.of(0, 30 , Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, 10 , Sort.Direction.DESC, "createdAt");
         PageImpl<Topic> topicPage = createMockPage(topics);
 
 
         Mockito.when(topicRepository.findByCreatedBy(ArgumentMatchers.any(Long.class), ArgumentMatchers.isA(Pageable.class))).thenReturn(topicPage);
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class))).thenReturn(Optional.of(user));
-        Assert.assertTrue(topicService.getTopicByCreatedBy(user.getUsername(), userPrincipal, 0, 30).getContent().get(0).getTitle().contains(topic1.getTitle()));
-        Assert.assertTrue(topicService.getTopicByCreatedBy(user.getUsername(), userPrincipal, 0, 30).getContent().get(0).getDescription().contains(topic1.getDescription()));
-        Assert.assertEquals(0, topicService.getTopicByCreatedBy(user.getUsername(), userPrincipal, 0, 30).getPage());
+        Assert.assertTrue(topicService.getTopicByCreatedBy(user.getUsername(), userPrincipal, 0, 10).getContent().get(0).getTitle().contains(topic1.getTitle()));
+        Assert.assertTrue(topicService.getTopicByCreatedBy(user.getUsername(), userPrincipal, 0, 10).getContent().get(0).getDescription().contains(topic1.getDescription()));
+        Assert.assertEquals(0, topicService.getTopicByCreatedBy(user.getUsername(), userPrincipal, 0, 10).getPage());
     }
 
     @Test
@@ -219,7 +219,7 @@ public class TopicServiceTest {
 
 
     private PageImpl createMockPage(List<Topic> list) {
-        PageRequest pageRequest = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         int total = list.size();
         int start = Math.toIntExact(pageRequest.getOffset());
         int end = Math.min(start + pageRequest.getPageSize(), total);

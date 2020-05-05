@@ -122,7 +122,7 @@ public class StoryServiceTest {
         story.setCreatedAt(createdAt);
 
 
-        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         List<Story> storiesList = new ArrayList<>();
         storiesList.add(story);
         List<Long> listOfLoves = new ArrayList<>();
@@ -145,9 +145,9 @@ public class StoryServiceTest {
         Mockito.when(storyRepository.findAll(ArgumentMatchers.isA(Pageable.class))).thenReturn(page);
         Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
         Mockito.when(loveRepository.countByStoryId(ArgumentMatchers.any(Long.class))).thenReturn(user.getId());
-        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,30).getContent().get(0).getTitle().contains(story.getTitle()));
-        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,30).getContent().get(0).getDescription().contains(story.getDescription()));
-        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,30).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
+        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,10).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,10).getContent().get(0).getDescription().contains(story.getDescription()));
+        Assert.assertTrue(storyService.getAllStories(userPrincipal, 0,10).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
 
 
     }
@@ -189,7 +189,7 @@ public class StoryServiceTest {
         story.setCreatedAt(createdAt);
 
 
-        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         List<Story> storiesList = new ArrayList<>();
         storiesList.add(story);
         List<Long> listOfLoves = new ArrayList<>();
@@ -209,10 +209,10 @@ public class StoryServiceTest {
         users.add(user);
         when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(user));
         when(storyRepository.findByCreatedBy(any(Long.class), isA(Pageable.class))).thenReturn(page);
-        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTitle().contains(story.getTitle()));
-        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getDescription().contains(story.getDescription()));
-        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
-        Assert.assertNotNull(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getCreatedBy());
+        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getDescription().contains(story.getDescription()));
+        Assert.assertTrue(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
+        Assert.assertNotNull(storyService.getStoriesCreatedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getTopic().getCreatedBy());
 
     }
 
@@ -255,7 +255,7 @@ public class StoryServiceTest {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
 
-        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         List<Story> storiesList = new ArrayList<>();
         Page<Long> lovesList = Mockito.mock(Page.class);
         storiesList.add(story);
@@ -282,10 +282,10 @@ public class StoryServiceTest {
         when(loveRepository.findByUserIdAndStoryIdIn(any(Long.class), any(List.class))).thenReturn(loves);
         when(userRepository.findByIdIn(any(List.class))).thenReturn(users);
         when(loveRepository.countByUserId(any(Long.class))).thenReturn(topic.getId());
-        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTitle().contains(story.getTitle()));
-        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getDescription().contains(story.getDescription()));
-        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
-        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 30).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getDescription().contains(story.getDescription()));
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
+        Assert.assertTrue(storyService.getStoriesLovedBy("dasda", userPrincipal, 0, 10).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
 
     }
 
@@ -354,7 +354,7 @@ public class StoryServiceTest {
         story.setTopic(topic);
         story.setCreatedAt(createdAt);
         story.setUpdatedAt(createdAt);
-        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         List<Story> storiesList = new ArrayList<>();
         storiesList.add(story);
         User user = new User((long ) 1223343,"Edvard More", "edvardmore123", "edvardmore@gmail.com", "password");
@@ -365,13 +365,13 @@ public class StoryServiceTest {
         when(topicRepository.findById((any(Long.class)))).thenReturn(Optional.of(topic));
         when(storyRepository.findByTopicId(any(Long.class), isA(Pageable.class))).thenReturn(page);
         when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user));
-        Assert.assertEquals(1, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getContent().size());
-        Assert.assertEquals(1, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getTotalPages());
-        Assert.assertEquals(0, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getPage());
-        Assert.assertEquals(1, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getTotalElement());
-        Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getContent().get(0).getTitle().contains(story.getTitle()));
-        Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
-        Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 30).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
+        Assert.assertEquals(1, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 10).getContent().size());
+        Assert.assertEquals(1, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 10).getTotalPages());
+        Assert.assertEquals(0, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 10).getPage());
+        Assert.assertEquals(1, storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 10).getTotalElement());
+        Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 10).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 10).getContent().get(0).getTopic().getTitle().contains(topic.getTitle()));
+        Assert.assertTrue(storyService.getStoryByTopicId(topic.getId(), userPrincipal, 0, 10).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
 
 
     }
@@ -471,7 +471,7 @@ public class StoryServiceTest {
         Map<Long, Long> storyUserLoveMap = new HashMap<>();
         storyUserLoveMap.put(love1.getStory().getId(), love1.getId());
 
-        Pageable pageable = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
 
 
         int total = loves.size();
@@ -491,7 +491,7 @@ public class StoryServiceTest {
     }
 
     private PageImpl createMockPage(List<Story> list) {
-        PageRequest pageRequest = PageRequest.of(0, 30, Sort.Direction.DESC, "createdAt");
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
         int total = list.size();
         int start = Math.toIntExact(pageRequest.getOffset());
         int end = Math.min(start + pageRequest.getPageSize(), total);
