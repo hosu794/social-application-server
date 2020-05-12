@@ -80,6 +80,27 @@ public class StoryServiceImpl implements StoryService {
         return new PagedResponse<>(storyResponses, stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
     }
 
+    public PagedResponse<StoryResponse> getStoriesByTitle(String title, UserPrincipal userPrincipal, int page, int size) {
+        ValidatePageUtil.validatePageNumberAndSize(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Story> stories = storyRepository.findByTitle(title, pageable);
+
+        if(stories.getNumberOfElements() == 0) {
+            return new PagedResponse<>(Collections.emptyList(), stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
+        }
+
+        Map<Long, User> creatorMap = getStoryCreatorMap(stories.getContent());
+
+        List<StoryResponse> storyResponses = stories.map(story -> {
+            long userLoveCount = loveRepository.countByStoryId(story.getId());
+
+            return ModelMapper.mapStoryToStoryResponse(story, creatorMap.get(story.getCreatedBy())
+                    , userLoveCount);
+        }).getContent();
+
+        return new PagedResponse<>(storyResponses, stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
+    }
+
     public PagedResponse<StoryResponse> getStoriesCreatedBy(String username, UserPrincipal currentUser, int page, int size) {
         ValidatePageUtil.validatePageNumberAndSize(page, size);
 

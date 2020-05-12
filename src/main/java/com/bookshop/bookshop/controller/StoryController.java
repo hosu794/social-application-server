@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.controller;
 
 import com.bookshop.bookshop.model.Story;
+import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.*;
 import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
@@ -61,6 +62,13 @@ public class StoryController {
     @GetMapping("/{storyId}")
     public StoryResponse getStoryById(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId) {
         return storyService.getStoryById(storyId, currentUser);
+    }
+
+    @GetMapping("/title/{title}")
+    public PagedResponse<StoryResponse> getStoriesByTitle(@CurrentUser UserPrincipal currentUser, @PathVariable String title,
+                                                          @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                          @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return storyService.getStoriesByTitle(title, currentUser, page, size);
     }
 
     @GetMapping("/topics/{topicId}")

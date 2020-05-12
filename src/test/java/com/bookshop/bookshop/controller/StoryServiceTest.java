@@ -85,6 +85,74 @@ public class StoryServiceTest {
     }
 
     @Test
+    public void should_return_getStoryByUsername() throws Exception {
+
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        Topic topic  = new Topic();
+        topic.setDescription("Topic Description");
+        topic.setTitle("Topic Title");
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+        topic.setId((long) 123);
+        topic.setCreatedBy((long) 12);
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+
+        User user = new User();
+        user.setId((long) 12);
+        user.setPassword("password");
+        user.setEmail("email@dsadasda.dsad");
+        user.setName("nanemadsad");
+        user.setUsername("sdad");
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+
+        Story story = new Story();
+        story.setDescription("Story Description");
+        story.setTitle("Story Title");
+        story.setTopic(topic);
+        story.setCreatedBy((long) 123);
+        story.setId((long) 333);
+        story.setTopic(topic);
+        story.setCreatedBy(user.getId());
+        story.setUpdatedAt(createdAt);
+        story.setCreatedAt(createdAt);
+        story.setBody("<p>Simple Body</p>");
+        story.setUpdatedBy(user.getId());
+
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
+        List<Story> storiesList = new ArrayList<>();
+        storiesList.add(story);
+        List<Long> listOfLoves = new ArrayList<>();
+        listOfLoves.add((long) 53412);
+        listOfLoves.add((long) 1323232);
+        listOfLoves.add((long) 13434);
+        int total = storiesList.size();
+        int start = Math.toIntExact(pageable.getOffset());
+        int end = Math.min(start + pageable.getPageSize(), total);
+
+
+        List<Story> output = new ArrayList<>();
+        output = storiesList.subList(start, end);
+        PageImpl page = new PageImpl<>(output, pageable, total);
+
+        List<User> users = new ArrayList<>();
+        users.add(user);
+
+        Mockito.when(storyRepository.findByTitle(ArgumentMatchers.any(String.class), ArgumentMatchers.isA(Pageable.class))).thenReturn(page);
+        Mockito.when(loveRepository.countByStoryId(ArgumentMatchers.any(Long.class))).thenReturn(user.getId());
+        Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
+
+        Assert.assertTrue(storyService.getStoriesByTitle(story.getTitle() , userPrincipal, 0,10).getContent().get(0).getTitle().contains(story.getTitle()));
+        Assert.assertTrue(storyService.getStoriesByTitle(story.getTitle(), userPrincipal, 0,10).getContent().get(0).getDescription().contains(story.getDescription()));
+        Assert.assertTrue(storyService.getStoriesByTitle(story.getTitle(), userPrincipal, 0,10).getContent().get(0).getTopic().getDescription().contains(topic.getDescription()));
+
+    }
+
+    @Test
     public void should_return_getAllStories_method() throws Exception {
 
 
@@ -424,6 +492,7 @@ public class StoryServiceTest {
         Assert.assertEquals(creatorMap, storyService.getStoryCreatorMap(stories));
 
     }
+
 
     @Test
     public void should_return_getStoryUserLoveMap() throws Exception {
