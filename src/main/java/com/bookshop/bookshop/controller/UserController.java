@@ -32,14 +32,14 @@ public class UserController {
         return  userService.getCurrentUser(currentUser);
     }
 
-    @GetMapping("/user/checkUsernameAvailability")
+    @PostMapping("/user/checkUsernameAvailability")
     public UserIdentityAvailability checkUsernameAvailability(@RequestBody UsernameRequest usernameRequest) {
 
         return userService.checkUsernameAvailability(usernameRequest);
 
     }
 
-    @GetMapping("/user/checkEmailAvailability")
+    @PostMapping("/user/checkEmailAvailability")
     public UserIdentityAvailability checkEmailAvailability(@RequestBody EmailRequest emailRequest) {
         return userService.checkEmailAvailability(emailRequest);
     }
