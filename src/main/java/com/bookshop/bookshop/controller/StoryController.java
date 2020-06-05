@@ -78,10 +78,10 @@ public class StoryController {
         return storyService.getStoryByTopicId(topicId, currentUser, page, size);
     }
 
-    @PostMapping("/{storyId}/loves")
+    @PostMapping("/loves")
     @PreAuthorize("hasRole('USER')")
-    public StoryResponse castLove(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId) {
-        return storyService.castLoveAndGetUpdateStory(storyId, currentUser);
+    public StoryResponse castLove(@CurrentUser UserPrincipal currentUser, @RequestBody LoveRequest loveRequest) {
+        return storyService.castLoveAndGetUpdateStory(loveRequest.getStoryId(), currentUser);
     }
 
 
