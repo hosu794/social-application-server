@@ -18,4 +18,6 @@ public interface UserService {
 
     PagedResponse<StoryResponse> getStoriesLovedBy(String username, UserPrincipal currentUser, int page, int size);
 
+    LoveAvailability checkIsUserLovedStory(Long storyId, Long userId);
+
 }

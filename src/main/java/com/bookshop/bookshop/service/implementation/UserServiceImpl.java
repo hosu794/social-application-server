@@ -76,4 +76,12 @@ public class UserServiceImpl implements UserService {
     public PagedResponse<StoryResponse> getStoriesLovedBy(String username, UserPrincipal currentUser, int page, int size) {
         return storyService.getStoriesLovedBy(username, currentUser, page, size);
     }
+
+    @Override
+    public LoveAvailability checkIsUserLovedStory(Long storyId, Long userId) {
+
+        Boolean isAvailable = !loveRepository.existsByStoryIdAndUserId(storyId, userId);
+
+        return new LoveAvailability(isAvailable);
+    }
 }

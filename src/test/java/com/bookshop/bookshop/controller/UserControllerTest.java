@@ -1,5 +1,7 @@
 package com.bookshop.bookshop.controller;
 
+import com.bookshop.bookshop.model.Story;
+import com.bookshop.bookshop.model.Topic;
 import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.EmailRequest;
 import com.bookshop.bookshop.payload.UserProfile;
@@ -20,8 +22,10 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.support.ArgumentConvertingMethodInvoker;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.swing.text.html.Option;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Optional;
@@ -121,6 +125,47 @@ public class UserControllerTest {
         Assert.assertEquals(userProfile.getUsername(), userService.getUserProfile(user.getUsername()).getUsername());
         Assert.assertEquals(userProfile.getLoveCount(), userService.getUserProfile(user.getUsername()).getLoveCount());
         Assert.assertEquals(userProfile.getName(), userService.getUserProfile(user.getUsername()).getName());
+
+    }
+
+    @Test
+    public void should_return_checkIsUserLikedStory() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        Topic topic  = new Topic();
+        topic.setDescription("Topic Description");
+        topic.setTitle("Topic Title");
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+        topic.setId((long) 123);
+        topic.setCreatedBy((long) 12);
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+
+        User user = new User();
+        user.setId((long) 12);
+        user.setPassword("password");
+        user.setEmail("email@dsadasda.dsad");
+        user.setName("nanemadsad");
+        user.setUsername("sdad");
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+
+        Story story = new Story();
+        story.setDescription("Story Description");
+        story.setTitle("Story Title");
+        story.setTopic(topic);
+        story.setCreatedBy((long) 123);
+        story.setId((long) 333);
+        story.setTopic(topic);
+        story.setCreatedBy(user.getId());
+        story.setUpdatedAt(createdAt);
+        story.setCreatedAt(createdAt);
+
+        Mockito.when(loveRepository.existsByStoryIdAndUserId(ArgumentMatchers.any(Long.class), ArgumentMatchers.anyLong())).thenReturn(true);
+        Assert.assertEquals(false, userService.checkIsUserLovedStory(user.getId(), story.getId()).getAvailable());
+        Assert.assertEquals(true, !userService.checkIsUserLovedStory(user.getId(), story.getId()).getAvailable());
 
     }
 

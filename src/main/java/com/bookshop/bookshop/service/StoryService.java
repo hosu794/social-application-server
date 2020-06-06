@@ -34,4 +34,6 @@ public interface StoryService {
     public Map<Long, Long> getStoryUserLoveMap(UserPrincipal currentUser, List<Long> storyIds);
 
     public PagedResponse<StoryResponse> getStoriesByTitle(String title, UserPrincipal currentUser, int page, int size);
+
+
 }

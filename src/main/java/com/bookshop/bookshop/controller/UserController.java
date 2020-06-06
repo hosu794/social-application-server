@@ -65,6 +65,9 @@ public class UserController {
         return userService.getStoriesLovedBy(username, currentUser, page,size);
     }
 
-
+    @PostMapping("/users/checkLoveAvailability")
+    public LoveAvailability checkLoveAvailability(@RequestBody StoryLikedRequest storyLikedRequest) {
+        return userService.checkIsUserLovedStory(storyLikedRequest.getStoryId(), storyLikedRequest.getUserId());
+    }
 
 }

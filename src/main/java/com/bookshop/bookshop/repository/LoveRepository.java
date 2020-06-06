@@ -28,6 +28,6 @@ public interface LoveRepository extends JpaRepository<Love, Long> {
     @Query("SELECT v.story.id FROM Love v where v.user.id = :userId")
     Page<Long> findLoveStoryIdsByUserId(@Param("userId") Long userId, Pageable pageable);
 
-
+    Boolean existsByStoryIdAndUserId(Long storyId, Long userId);
 
 }

@@ -26,9 +26,6 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
     List<Story> findByIdIn(List<Long> pollIds, Sort sort);
 
     Page<Story> findByTopicId(Long topicId, Pageable pageable);
-//
-//    @Query(value = "SELECT * FROM stories WHERE lower(title) like lower('%title%')", nativeQuery = true)
-//    Page<Story> findByCharacterInTitle(@Param("title") String title, Pageable pageable);
 
     @Query("select u from Story u where lower(u.title) like lower(concat('%', :title,'%'))")
     public Page<Story> findByTitle(@Param("title") String title, Pageable pageable);
