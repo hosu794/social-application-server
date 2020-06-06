@@ -44,6 +44,11 @@ public class UserController {
         return userService.checkEmailAvailability(emailRequest);
     }
 
+    @PostMapping("/user/checkLoveAvailability")
+    public LoveAvailability checkLoveAvailability(@RequestBody StoryLikedRequest storyLikedRequest) {
+        return userService.checkIsUserLovedStory(storyLikedRequest.getStoryId(), storyLikedRequest.getUserId());
+    }
+
     @GetMapping("/users/{username}")
     public UserProfile getUserProfile(@PathVariable(value = "username") String username) {
         return userService.getUserProfile(username);
@@ -65,9 +70,6 @@ public class UserController {
         return userService.getStoriesLovedBy(username, currentUser, page,size);
     }
 
-    @PostMapping("/users/checkLoveAvailability")
-    public LoveAvailability checkLoveAvailability(@RequestBody StoryLikedRequest storyLikedRequest) {
-        return userService.checkIsUserLovedStory(storyLikedRequest.getStoryId(), storyLikedRequest.getUserId());
-    }
+
 
 }
