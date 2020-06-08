@@ -21,12 +21,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -557,6 +559,49 @@ public class StoryServiceTest {
         Assert.assertEquals(storyUserLoveMap.get(0), storyService.getStoryUserLoveMap(userPrincipal, longs).get(0));
 
 
+    }
+
+    @Test
+    public void should_return_deleteLove_method() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        Topic topic  = new Topic();
+        topic.setDescription("Topic Description");
+        topic.setTitle("Topic Title");
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+        topic.setId((long) 123);
+        topic.setCreatedBy((long) 12);
+        topic.setCreatedAt(createdAt);
+        topic.setUpdatedAt(createdAt);
+
+        User user = new User();
+        user.setId((long) 12);
+        user.setPassword("password");
+        user.setEmail("email@dsadasda.dsad");
+        user.setName("nanemadsad");
+        user.setUsername("sdad");
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+
+        Story story = new Story();
+        story.setDescription("Story Description");
+        story.setTitle("Story Title");
+        story.setTopic(topic);
+        story.setCreatedBy((long) 123);
+        story.setId((long) 333);
+        story.setTopic(topic);
+        story.setCreatedBy(user.getId());
+        story.setUpdatedAt(createdAt);
+        story.setCreatedAt(createdAt);
+
+        Love love = new Love(story, user);
+        love.setId(new Random().nextLong());
+
+        Mockito.when(userRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(user));
+        Mockito.when(storyRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(story));
+        Mockito.when(loveRepository.findByUserIdAndStoryId(ArgumentMatchers.any(Long.class), ArgumentMatchers.any(Long.class))).thenReturn(love);
+        Assert.assertEquals(HttpStatus.OK, storyService.deleteLove(user.getId(), userPrincipal).getStatusCode());
     }
 
     private PageImpl createMockPage(List<Story> list) {

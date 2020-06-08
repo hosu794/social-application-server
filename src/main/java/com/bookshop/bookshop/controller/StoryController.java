@@ -8,6 +8,7 @@ import com.bookshop.bookshop.repository.StoryRepository;
 import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.CurrentUser;
 import com.bookshop.bookshop.security.UserPrincipal;
+import com.bookshop.bookshop.service.StoryService;
 import com.bookshop.bookshop.service.implementation.StoryServiceImpl;
 import com.bookshop.bookshop.util.AppConstants;
 import org.slf4j.Logger;
@@ -82,6 +83,12 @@ public class StoryController {
     @PreAuthorize("hasRole('USER')")
     public StoryResponse castLove(@CurrentUser UserPrincipal currentUser, @RequestBody LoveRequest loveRequest) {
         return storyService.castLoveAndGetUpdateStory(loveRequest.getStoryId(), currentUser);
+    }
+
+    @DeleteMapping("/loves")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deleteLove(@CurrentUser UserPrincipal currentUser,@RequestBody @Valid StoryIdentityRequest storyIdentityRequest) {
+        return storyService.deleteLove(storyIdentityRequest.getStoryId(), currentUser);
     }
 
 

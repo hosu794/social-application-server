@@ -6,6 +6,7 @@ import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.Topic;
 import com.bookshop.bookshop.model.User;
+import com.bookshop.bookshop.payload.ApiResponse;
 import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 import com.bookshop.bookshop.payload.StoryResponse;
@@ -25,8 +26,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.xml.ws.Response;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -256,6 +259,27 @@ public class StoryServiceImpl implements StoryService {
         }).getContent();
 
         return new PagedResponse<>(storyResponses, stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
+
+    }
+
+    public ResponseEntity<?> deleteLove(Long storyId, UserPrincipal currentUser) {
+        Story story = storyRepository.findById(storyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Story", "id", storyId));
+
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "user", currentUser.getId()));
+
+        Love love = loveRepository.findByUserIdAndStoryId(user.getId(), story.getId());
+
+        if(love == null) {
+            throw new BadRequestException("Sorry, You are not cast this love");
+        } else {
+            loveRepository.delete(love);
+            return ResponseEntity.ok().body(new ApiResponse(true, "Story deleted successfully"));
+        }
+
+
+
 
     }
 

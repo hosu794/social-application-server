@@ -7,6 +7,8 @@ import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 import com.bookshop.bookshop.payload.StoryResponse;
 import com.bookshop.bookshop.security.UserPrincipal;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -35,5 +37,5 @@ public interface StoryService {
 
     public PagedResponse<StoryResponse> getStoriesByTitle(String title, UserPrincipal currentUser, int page, int size);
 
-
+    ResponseEntity<?> deleteLove(Long userId, UserPrincipal currentUser);
 }
