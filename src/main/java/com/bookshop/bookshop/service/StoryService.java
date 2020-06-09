@@ -31,11 +31,13 @@ public interface StoryService {
 
     public PagedResponse<StoryResponse> getStoryByTopicId(Long topicId, UserPrincipal currentUser, int page, int size);
 
-    public Map<Long, User> getStoryCreatorMap(List<Story> stories);
+    public StoryResponse deleteAndReturnNewStory(Story story, Love love, User creator);
 
-    public Map<Long, Long> getStoryUserLoveMap(UserPrincipal currentUser, List<Long> storyIds);
+    public Map<Long, User> getCreatorsIdsAndCreatorOfStories(List<Story> stories);
+
+    public Map<Long, Long> getCurrentUserStoryIds(UserPrincipal currentUser, List<Long> storyIds);
 
     public PagedResponse<StoryResponse> getStoriesByTitle(String title, UserPrincipal currentUser, int page, int size);
 
-    ResponseEntity<?> deleteLove(Long userId, UserPrincipal currentUser);
+    public StoryResponse deleteLove(Long userId, UserPrincipal currentUser);
 }

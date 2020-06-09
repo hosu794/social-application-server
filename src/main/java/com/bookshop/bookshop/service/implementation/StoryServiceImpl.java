@@ -61,7 +61,10 @@ public class StoryServiceImpl implements StoryService {
 
 
     public PagedResponse<StoryResponse> getAllStories(UserPrincipal currentUser, int page, int size) {
+
+
         ValidatePageUtil.validatePageNumberAndSize(page, size);
+
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Story> stories = storyRepository.findAll(pageable);
@@ -71,7 +74,7 @@ public class StoryServiceImpl implements StoryService {
         }
 
 
-        Map<Long, User> creatorMap = getStoryCreatorMap(stories.getContent());
+        Map<Long, User> creatorMap = getCreatorsIdsAndCreatorOfStories(stories.getContent());
 
         List<StoryResponse> storyResponses = stories.map(story -> {
             long userLoveCount = loveRepository.countByStoryId(story.getId());
@@ -92,7 +95,7 @@ public class StoryServiceImpl implements StoryService {
             return new PagedResponse<>(Collections.emptyList(), stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
         }
 
-        Map<Long, User> creatorMap = getStoryCreatorMap(stories.getContent());
+        Map<Long, User> creatorMap = getCreatorsIdsAndCreatorOfStories(stories.getContent());
 
         List<StoryResponse> storyResponses = stories.map(story -> {
             long userLoveCount = loveRepository.countByStoryId(story.getId());
@@ -120,7 +123,7 @@ public class StoryServiceImpl implements StoryService {
         //Map Stories to StoryResponse containing love count and story creator details
         List<Long> storyIds = stories.map(Story::getId).getContent();
 
-        Map<Long, Long> storyUserLoveMap = getStoryUserLoveMap(currentUser, storyIds);
+        Map<Long, Long> storyUserLoveMap = getCurrentUserStoryIds(currentUser, storyIds);
 
         List<StoryResponse> storyResponses = stories.map(story -> {
             long userLoveCount = loveRepository.countByStoryId(story.getId());
@@ -153,8 +156,8 @@ public class StoryServiceImpl implements StoryService {
         List<Story> stories = storyRepository.findByIdIn(storyIds, sort);
 
         //Map Stories to StoryResponses containing love counts and story creator details
-        Map<Long, Long> storyUserLoveMap = getStoryUserLoveMap(currentUser, storyIds);
-        Map<Long, User> creatorMap = getStoryCreatorMap(stories);
+        Map<Long, Long> storyUserLoveMap = getCurrentUserStoryIds(currentUser, storyIds);
+        Map<Long, User> creatorMap = getCreatorsIdsAndCreatorOfStories(stories);
 
         List<StoryResponse> storyResposes = stories.stream().map(story -> {
 
@@ -221,7 +224,7 @@ public class StoryServiceImpl implements StoryService {
             throw new BadRequestException("Sorry! You hae already cast your love in this story");
         }
 
-        //Retrieve story creator details
+
         User creator = userRepository.findById(story.getCreatedBy())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
 
@@ -247,7 +250,7 @@ public class StoryServiceImpl implements StoryService {
 
         List<Long> storyIds = stories.map(Story::getId).getContent();
 
-        Map<Long, Long> storyUserLoveMap = getStoryUserLoveMap(currentUser, storyIds);
+        Map<Long, Long> storyUserLoveMap = getCurrentUserStoryIds(currentUser, storyIds);
 
         List<StoryResponse> storyResponses = stories.map(story -> {
 
@@ -262,29 +265,24 @@ public class StoryServiceImpl implements StoryService {
 
     }
 
-    public ResponseEntity<?> deleteLove(Long storyId, UserPrincipal currentUser) {
+    public StoryResponse deleteLove(Long storyId, UserPrincipal currentUser) {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Story", "id", storyId));
 
-        User user = userRepository.findById(currentUser.getId())
+        User creator = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "user", currentUser.getId()));
 
-        Love love = loveRepository.findByUserIdAndStoryId(user.getId(), story.getId());
+        Love love = loveRepository.findByUserIdAndStoryId(creator.getId(), story.getId());
 
         if(love == null) {
             throw new BadRequestException("Sorry, You are not cast this love");
         } else {
-            loveRepository.delete(love);
-            return ResponseEntity.ok().body(new ApiResponse(true, "Story deleted successfully"));
+            return deleteAndReturnNewStory(story, love, creator);
         }
-
-
-
 
     }
 
-    //Retrieve Story Creator details of the given list of stories
-    public Map<Long, User> getStoryCreatorMap(List<Story> stories) {
+    public Map<Long, User> getCreatorsIdsAndCreatorOfStories(List<Story> stories) {
 
 
         List<Long> creatorIds = stories.stream()
@@ -301,8 +299,8 @@ public class StoryServiceImpl implements StoryService {
 
     }
 
-    //Retrieve current user's storyIds
-    public Map<Long, Long> getStoryUserLoveMap(UserPrincipal currentUser, List<Long> storyIds) {
+
+    public Map<Long, Long> getCurrentUserStoryIds(UserPrincipal currentUser, List<Long> storyIds) {
 
         Map<Long, Long> storyUserLoveMap = null;
 
@@ -316,5 +314,13 @@ public class StoryServiceImpl implements StoryService {
 
         return storyUserLoveMap;
     }
+
+    public StoryResponse deleteAndReturnNewStory(Story story, Love love, User creator) {
+        loveRepository.delete(love);
+        long totalLoves = loveRepository.countByStoryId(story.getId());
+        return ModelMapper.mapStoryToStoryResponse(story, creator, totalLoves);
+    }
+
+
 
 }

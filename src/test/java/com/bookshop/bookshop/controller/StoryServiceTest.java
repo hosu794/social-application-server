@@ -489,9 +489,9 @@ public class StoryServiceTest {
 
         Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
 
-        Assert.assertEquals(creatorMap.size(), storyService.getStoryCreatorMap(stories).size());
-        Assert.assertEquals(creatorMap.get(0), storyService.getStoryCreatorMap(stories).get(0));
-        Assert.assertEquals(creatorMap, storyService.getStoryCreatorMap(stories));
+        Assert.assertEquals(creatorMap.size(), storyService.getCreatorsIdsAndCreatorOfStories(stories).size());
+        Assert.assertEquals(creatorMap.get(0), storyService.getCreatorsIdsAndCreatorOfStories(stories).get(0));
+        Assert.assertEquals(creatorMap, storyService.getCreatorsIdsAndCreatorOfStories(stories));
 
     }
 
@@ -556,7 +556,7 @@ public class StoryServiceTest {
         PageImpl page = new PageImpl<>(output, pageable, total);
 
 
-        Assert.assertEquals(storyUserLoveMap.get(0), storyService.getStoryUserLoveMap(userPrincipal, longs).get(0));
+        Assert.assertEquals(storyUserLoveMap.get(0), storyService.getCurrentUserStoryIds(userPrincipal, longs).get(0));
 
 
     }
@@ -601,7 +601,12 @@ public class StoryServiceTest {
         Mockito.when(userRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(user));
         Mockito.when(storyRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(story));
         Mockito.when(loveRepository.findByUserIdAndStoryId(ArgumentMatchers.any(Long.class), ArgumentMatchers.any(Long.class))).thenReturn(love);
-        Assert.assertEquals(HttpStatus.OK, storyService.deleteLove(user.getId(), userPrincipal).getStatusCode());
+        Mockito.when(loveRepository.countByStoryId(ArgumentMatchers.any(Long.class))).thenReturn((long) 12);
+        Assert.assertEquals(story.getBody(), storyService.deleteLove(user.getId(), userPrincipal).getBody());
+        Assert.assertEquals(story.getTitle(), storyService.deleteLove(user.getId(), userPrincipal).getTitle());
+        Assert.assertEquals(story.getDescription(), storyService.deleteLove(user.getId(), userPrincipal).getDescription());
+        Assert.assertEquals(user.getUsername(), storyService.deleteLove(user.getId(), userPrincipal).getCreatedBy().getUsername());
+
     }
 
     private PageImpl createMockPage(List<Story> list) {
