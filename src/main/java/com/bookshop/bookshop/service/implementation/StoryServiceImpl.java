@@ -265,7 +265,7 @@ public class StoryServiceImpl implements StoryService {
 
     }
 
-    public StoryResponse deleteLove(Long storyId, UserPrincipal currentUser) {
+    public StoryResponse deleteLoveAndGetUpdateStory(Long storyId, UserPrincipal currentUser) {
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Story", "id", storyId));
 

@@ -39,5 +39,5 @@ public interface StoryService {
 
     public PagedResponse<StoryResponse> getStoriesByTitle(String title, UserPrincipal currentUser, int page, int size);
 
-    public StoryResponse deleteLove(Long userId, UserPrincipal currentUser);
+    public StoryResponse deleteLoveAndGetUpdateStory(Long userId, UserPrincipal currentUser);
 }

@@ -602,10 +602,10 @@ public class StoryServiceTest {
         Mockito.when(storyRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(story));
         Mockito.when(loveRepository.findByUserIdAndStoryId(ArgumentMatchers.any(Long.class), ArgumentMatchers.any(Long.class))).thenReturn(love);
         Mockito.when(loveRepository.countByStoryId(ArgumentMatchers.any(Long.class))).thenReturn((long) 12);
-        Assert.assertEquals(story.getBody(), storyService.deleteLove(user.getId(), userPrincipal).getBody());
-        Assert.assertEquals(story.getTitle(), storyService.deleteLove(user.getId(), userPrincipal).getTitle());
-        Assert.assertEquals(story.getDescription(), storyService.deleteLove(user.getId(), userPrincipal).getDescription());
-        Assert.assertEquals(user.getUsername(), storyService.deleteLove(user.getId(), userPrincipal).getCreatedBy().getUsername());
+        Assert.assertEquals(story.getBody(), storyService.deleteLoveAndGetUpdateStory(user.getId(), userPrincipal).getBody());
+        Assert.assertEquals(story.getTitle(), storyService.deleteLoveAndGetUpdateStory(user.getId(), userPrincipal).getTitle());
+        Assert.assertEquals(story.getDescription(), storyService.deleteLoveAndGetUpdateStory(user.getId(), userPrincipal).getDescription());
+        Assert.assertEquals(user.getUsername(), storyService.deleteLoveAndGetUpdateStory(user.getId(), userPrincipal).getCreatedBy().getUsername());
 
     }
 
