@@ -85,10 +85,10 @@ public class StoryController {
         return storyService.castLoveAndGetUpdateStory(loveRequest.getStoryId(), currentUser);
     }
 
-    @DeleteMapping("/loves")
+    @DeleteMapping("/loves/{storyId}")
     @PreAuthorize("hasRole('USER')")
-    public StoryResponse deleteLove(@CurrentUser UserPrincipal currentUser,@RequestBody LoveRequest loveRequest) {
-        return storyService.deleteLoveAndGetUpdateStory(loveRequest.getStoryId(), currentUser);
+    public StoryResponse deleteLove(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId) {
+        return storyService.deleteLoveAndGetUpdateStory(storyId, currentUser);
     }
 
 
