@@ -87,7 +87,7 @@ public class StoryController {
 
     @DeleteMapping("/loves")
     @PreAuthorize("hasRole('USER')")
-    public StoryResponse deleteLove(@CurrentUser UserPrincipal currentUser,@RequestBody @Valid StoryIdentityRequest storyIdentityRequest) {
+    public StoryResponse deleteLove(@CurrentUser UserPrincipal currentUser,@RequestBody StoryIdentityRequest storyIdentityRequest) {
         return storyService.deleteLove(storyIdentityRequest.getStoryId(), currentUser);
     }
 
