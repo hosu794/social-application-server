@@ -52,6 +52,8 @@ public class TopicController {
     @GetMapping("/title/{title}")
     public TopicResponse getTopicByTitle(@CurrentUser UserPrincipal currentUser, @PathVariable String title) {
         return topicService.getTopicByTitle(title, currentUser);
+
+
     }
 
 
