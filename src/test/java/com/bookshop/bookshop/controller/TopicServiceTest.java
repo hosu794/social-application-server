@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.swing.text.html.Option;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
@@ -213,6 +214,43 @@ public class TopicServiceTest {
         Assert.assertEquals(creatorMap.size(), topicService.getTopicCreatorMap(topics).size());
         Assert.assertEquals(creatorMap.get(0), topicService.getTopicCreatorMap(topics).get(0));
         Assert.assertEquals(creatorMap, topicService.getTopicCreatorMap(topics));
+
+
+    }
+
+    @Test
+    public void should_return_getTopicByName() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setUsername("hosu794");
+        user.setName("Grzegorz Szczęsny");
+        user.setEmail("grzesszesny14@gmail.com");
+        user.setId((long) 12432);
+        user.setUpdatedAt(createdAt);
+        user.setCreatedAt(createdAt);
+
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+        Topic topic = new Topic();
+        topic.setCreatedBy(user.getId());
+        topic.setCreatedAt(createdAt);
+        topic.setTitle("Title of the topic");
+        topic.setUpdatedAt(createdAt);
+        topic.setCreatedAt(createdAt);
+        topic.setDescription("Description");
+
+        List<Topic> topics = new ArrayList<>();
+        topics.add(topic);
+
+        List<User> users  = new ArrayList<>();
+        users.add(user);
+
+        Mockito.when(topicRepository.findByTitle(ArgumentMatchers.anyString())).thenReturn(Optional.of(topic));
+        Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
+
+        Assert.assertEquals(topic.getId(), topicService.getTopicByTitle(topic.getTitle(), userPrincipal).getId());
+        Assert.assertEquals(topic.getDescription(), topicService.getTopicByTitle(topic.getTitle(), userPrincipal).getDescription());
+        Assert.assertEquals(topic.getTitle(), topicService.getTopicByTitle(topic.getTitle(), userPrincipal).getTitle());
 
 
     }

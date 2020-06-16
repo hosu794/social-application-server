@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.controller;
 
 import com.bookshop.bookshop.model.Topic;
+import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.ApiResponse;
 import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.TopicRequest;
@@ -46,6 +47,11 @@ public class TopicController {
 
         return ResponseEntity.created(location)
                 .body(new ApiResponse(true, "Topic Created Successfully"));
+    }
+
+    @GetMapping("/title/{title}")
+    public TopicResponse getTopicByTitle(@CurrentUser UserPrincipal currentUser, @PathVariable String title) {
+        return topicService.getTopicByTitle(title, currentUser);
     }
 
 

@@ -41,4 +41,5 @@ public interface TopicService {
     public Map<Long, User> getTopicCreatorMap(List<Topic> topics);
 
 
+    TopicResponse getTopicByTitle(String title, UserPrincipal currentUser);
 }

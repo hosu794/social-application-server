@@ -40,7 +40,8 @@ public class TopicServiceImpl implements TopicService {
 
     public TopicServiceImpl() {}
 
-   private TopicRepository topicRepository;
+
+    private TopicRepository topicRepository;
    private UserRepository userRepository;
 
     public PagedResponse<TopicResponse> getAllTopics(UserPrincipal currentUser, int page, int size) {
@@ -103,6 +104,18 @@ public class TopicServiceImpl implements TopicService {
 
         return ModelMapper.mapTopicToTopicResponse(topic, creator);
     }
+
+
+    public TopicResponse getTopicByTitle(String title, UserPrincipal currentUser) {
+        Topic topic = topicRepository.findByTitle(title)
+                .orElseThrow(() -> new ResourceNotFoundException("Topic", "id", title));
+
+        User creator = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+        return ModelMapper.mapTopicToTopicResponse(topic, creator);
+    }
+
 
     //Retrieve Topic Creator details of the given list of topics
     public Map<Long, User> getTopicCreatorMap(List<Topic> topics) {
