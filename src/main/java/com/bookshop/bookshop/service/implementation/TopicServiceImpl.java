@@ -107,12 +107,13 @@ public class TopicServiceImpl implements TopicService {
 
 
     public TopicResponse getTopicByTitle(String title, UserPrincipal currentUser) {
+
+        System.out.println("Title");
         Topic topic = topicRepository.findByTitle(title)
                 .orElseThrow(() -> new ResourceNotFoundException("Topic", "id", title));
 
         User creator = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
-
+                .orElseThrow(() -> new ResourceNotFoundException("User",  "id", currentUser.getId()));
         return ModelMapper.mapTopicToTopicResponse(topic, creator);
     }
 
