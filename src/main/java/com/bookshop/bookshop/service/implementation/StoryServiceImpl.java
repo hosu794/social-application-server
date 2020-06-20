@@ -29,6 +29,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.ColorUIResource;
 import javax.xml.ws.Response;
 import java.util.Collections;
 import java.util.List;
@@ -279,6 +280,29 @@ public class StoryServiceImpl implements StoryService {
         } else {
             return deleteAndReturnNewStory(story, love, creator);
         }
+
+    }
+
+
+    public ResponseEntity<?> deleteStory(Long storyId, UserPrincipal currentUser) {
+
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "user", currentUser.getId()));
+
+        Story story = storyRepository.findById(storyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Story", "id", storyId));
+
+        long creationId = user.getId();
+
+        long storyCreatorId = story.getCreatedBy();
+
+        if(creationId == storyCreatorId) {
+            storyRepository.delete(story);
+            return ResponseEntity.ok(new ApiResponse(true, "Story deleted successfully"));
+        } else {
+            throw new BadRequestException("Sorry you not created this story");
+        }
+
 
     }
 

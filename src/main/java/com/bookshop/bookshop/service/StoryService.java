@@ -3,6 +3,7 @@ package com.bookshop.bookshop.service;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.User;
+import com.bookshop.bookshop.payload.ApiResponse;
 import com.bookshop.bookshop.payload.PagedResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 import com.bookshop.bookshop.payload.StoryResponse;
@@ -10,6 +11,7 @@ import com.bookshop.bookshop.security.UserPrincipal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import javax.xml.ws.Response;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -40,4 +42,6 @@ public interface StoryService {
     public PagedResponse<StoryResponse> getStoriesByTitle(String title, UserPrincipal currentUser, int page, int size);
 
     public StoryResponse deleteLoveAndGetUpdateStory(Long userId, UserPrincipal currentUser);
+
+    public ResponseEntity<?> deleteStory(Long storyId, UserPrincipal currentUser);
 }

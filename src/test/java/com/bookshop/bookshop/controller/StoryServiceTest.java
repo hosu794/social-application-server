@@ -1,10 +1,12 @@
 package com.bookshop.bookshop.controller;
 
+import com.bookshop.bookshop.exception.BadRequestException;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.Topic;
 import com.bookshop.bookshop.model.User;
 
+import com.bookshop.bookshop.payload.ApiResponse;
 import com.bookshop.bookshop.payload.StoryRequest;
 
 import com.bookshop.bookshop.repository.LoveRepository;
@@ -15,14 +17,17 @@ import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
 import com.bookshop.bookshop.service.implementation.StoryServiceImpl;
 
+import net.bytebuddy.asm.Advice;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.internal.invocation.ArgumentMatcherAction;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,6 +54,7 @@ public class StoryServiceTest {
     LoveRepository loveRepository = mock(LoveRepository.class);
     TopicRepository topicRepository = mock(TopicRepository.class);
     StoryService storyService = new StoryServiceImpl(storyRepository, userRepository, loveRepository, topicRepository);
+
 
 
     @Test
@@ -606,6 +612,56 @@ public class StoryServiceTest {
         Assert.assertEquals(story.getTitle(), storyService.deleteLoveAndGetUpdateStory(user.getId(), userPrincipal).getTitle());
         Assert.assertEquals(story.getDescription(), storyService.deleteLoveAndGetUpdateStory(user.getId(), userPrincipal).getDescription());
         Assert.assertEquals(user.getUsername(), storyService.deleteLoveAndGetUpdateStory(user.getId(), userPrincipal).getCreatedBy().getUsername());
+
+    }
+
+    @Test
+    public void should_return_deleteStory() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setUsername("hosu794");
+        user.setName("Grzegorz Szczęsny");
+        user.setEmail("grzesszesny14@gmail.com");
+        user.setId((long) 12432);
+        user.setUpdatedAt(createdAt);
+        user.setCreatedAt(createdAt);
+
+
+
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+        Topic topic = new Topic();
+        topic.setCreatedBy(user.getId());
+        topic.setCreatedAt(createdAt);
+        topic.setTitle("Title of the topic");
+        topic.setUpdatedAt(createdAt);
+        topic.setCreatedAt(createdAt);
+        topic.setDescription("Description");
+        topic.setId((long) 23422434);
+
+        Story story = new Story();
+        story.setCreatedBy(user.getId());
+        story.setCreatedAt(createdAt);
+        story.setUpdatedAt(createdAt);
+        story.setTitle("Title of the story");
+        story.setDescription("Description of the story");
+        story.setId((long) 233);
+        story.setBody("Body");
+        story.setTopic(topic);
+
+        ApiResponse apiResponse = new ApiResponse(true, "Story deleted successful");
+
+        Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
+        Mockito.when(storyRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(story));
+        Assert.assertEquals(apiResponse.getSuccess(), storyService.deleteStory(ArgumentMatchers.anyLong(), userPrincipal).hasBody());
+
+        story.setCreatedBy(12343L);
+        user.setId(34409545L);
+
+
+        Assertions.assertThrows(BadRequestException.class, () -> {
+            storyService.deleteStory(ArgumentMatchers.anyLong(), userPrincipal);
+        });
 
     }
 

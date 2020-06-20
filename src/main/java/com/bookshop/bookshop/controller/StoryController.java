@@ -91,6 +91,11 @@ public class StoryController {
         return storyService.deleteLoveAndGetUpdateStory(storyId, currentUser);
     }
 
+    @DeleteMapping("/{storyId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deleteStory(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId) {
+        return storyService.deleteStory(storyId, currentUser);
+    }
 
 
 
