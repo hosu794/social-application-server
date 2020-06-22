@@ -77,6 +77,7 @@ public class StoryServiceImpl implements StoryService {
 
         Map<Long, User> creatorMap = getCreatorsIdsAndCreatorOfStories(stories.getContent());
 
+
         List<StoryResponse> storyResponses = stories.map(story -> {
             long userLoveCount = loveRepository.countByStoryId(story.getId());
 
@@ -85,6 +86,7 @@ public class StoryServiceImpl implements StoryService {
         }).getContent();
 
         return new PagedResponse<>(storyResponses, stories.getNumber(), stories.getSize(), stories.getTotalElements(), stories.getTotalPages(), stories.isLast());
+
     }
 
     public PagedResponse<StoryResponse> getStoriesByTitle(String title, UserPrincipal userPrincipal, int page, int size) {

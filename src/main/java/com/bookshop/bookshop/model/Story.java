@@ -44,6 +44,9 @@ public class Story extends UserDateAudit {
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Love> loves;
+
     public Story(@Length(min = 5, message = "*Your title must at least 5 characters") @NotEmpty(message = "*Please provide title") String title,
                  String body, @NotEmpty(message = "*Please provide the description") String description, Topic topic) {
         this.title = title;
