@@ -120,6 +120,9 @@ public class AuthenticationServiceTest {
 
     }
 
+    @Test
+    public void should_return_deleteByTitle() throws Exception {}
+
     private String generateMockToken(String secret, int expirationTime, UserPrincipal userPrincipal) {
 
         Date now = new Date();
