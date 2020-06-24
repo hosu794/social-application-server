@@ -65,6 +65,12 @@ public class StoryController {
         return storyService.getStoryById(storyId, currentUser);
     }
 
+    @GetMapping("/username/{username}")
+    public PagedResponse<StoryResponse> getStoryByCreatedBy(@PathVariable String username, @CurrentUser UserPrincipal currentUser,   @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size ) {
+        return storyService.getStoriesCreatedBy(username, currentUser, page, size);
+    }
+
     @GetMapping("/title/{title}")
     public PagedResponse<StoryResponse> getStoriesByTitle(@CurrentUser UserPrincipal currentUser, @PathVariable String title,
                                                           @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,

@@ -649,6 +649,9 @@ public class StoryServiceTest {
         story.setBody("Body");
         story.setTopic(topic);
 
+        Love love = new Love(story, user);
+        love.setId(43443L);
+
         ApiResponse apiResponse = new ApiResponse(true, "Story deleted successful");
 
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
