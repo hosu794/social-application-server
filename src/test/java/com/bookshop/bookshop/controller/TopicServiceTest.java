@@ -8,6 +8,7 @@ import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.TopicService;
 import com.bookshop.bookshop.service.implementation.TopicServiceImpl;
+import com.bookshop.bookshop.util.MockUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,7 +64,7 @@ public class TopicServiceTest {
         topics.add(topic1);
 
         Pageable pageable = PageRequest.of(0, 10 , Sort.Direction.DESC, "createdAt");
-        PageImpl<Topic> topicPage = createMockPage(topics);
+        PageImpl<Topic> topicPage = MockUtil.createMockPage(topics);
 
         Mockito.when(userRepository.findByIdIn(ArgumentMatchers.any(List.class))).thenReturn(users);
         Mockito.when(topicRepository.findAll(ArgumentMatchers.isA(Pageable.class))).thenReturn(topicPage);
@@ -105,7 +106,7 @@ public class TopicServiceTest {
         topics.add(topic1);
 
         Pageable pageable = PageRequest.of(0, 10 , Sort.Direction.DESC, "createdAt");
-        PageImpl<Topic> topicPage = createMockPage(topics);
+        PageImpl<Topic> topicPage = MockUtil.createMockPage(topics);
 
 
         Mockito.when(topicRepository.findByCreatedBy(ArgumentMatchers.any(Long.class), ArgumentMatchers.isA(Pageable.class))).thenReturn(topicPage);
@@ -256,20 +257,6 @@ public class TopicServiceTest {
     }
 
 
-    private PageImpl createMockPage(List<Topic> list) {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
-        int total = list.size();
-        int start = Math.toIntExact(pageRequest.getOffset());
-        int end = Math.min(start + pageRequest.getPageSize(), total);
-
-        List<Topic> output = new ArrayList<>();
-
-        if(start <= end) {
-            output = list.subList(start, end);
-        }
-
-        return new PageImpl<>(output, pageRequest, total);
-    }
 
 
 }

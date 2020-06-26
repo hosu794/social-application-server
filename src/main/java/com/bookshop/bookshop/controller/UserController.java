@@ -70,6 +70,13 @@ public class UserController {
         return userService.getStoriesLovedBy(username, currentUser, page,size);
     }
 
+    @GetMapping("/users/{userId}/statistics")
+    public UserStoryCount getUserStoriesStatistics(@PathVariable(value = "userId") Long userId,  @CurrentUser UserPrincipal currentUser,
+                                                   @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                                   @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return userService.getUserStoriesStatistics(userId, currentUser, page, size);
+    }
+
 
 
 }

@@ -17,6 +17,7 @@ import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
 import com.bookshop.bookshop.service.implementation.StoryServiceImpl;
 
+import com.bookshop.bookshop.util.MockUtil;
 import net.bytebuddy.asm.Advice;
 import org.junit.Assert;
 import org.junit.Test;
@@ -436,7 +437,7 @@ public class StoryServiceTest {
         User user = new User((long ) 1223343,"Edvard More", "edvardmore123", "edvardmore@gmail.com", "password");
         UserPrincipal userPrincipal = UserPrincipal.create(user);
 
-        PageImpl<Story> page = createMockPage(storiesList);
+        PageImpl<Story> page = MockUtil.createMockPage(storiesList);
         when(loveRepository.countByStoryId(any(Long.class))).thenReturn(new Random().nextLong());
         when(topicRepository.findById((any(Long.class)))).thenReturn(Optional.of(topic));
         when(storyRepository.findByTopicId(any(Long.class), isA(Pageable.class))).thenReturn(page);
@@ -668,20 +669,7 @@ public class StoryServiceTest {
 
     }
 
-    private PageImpl createMockPage(List<Story> list) {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.Direction.DESC, "createdAt");
-        int total = list.size();
-        int start = Math.toIntExact(pageRequest.getOffset());
-        int end = Math.min(start + pageRequest.getPageSize(), total);
 
-        List<Story> output = new ArrayList<>();
-
-        if(start <= end) {
-            output = list.subList(start, end);
-        }
-
-        return new PageImpl<>(output, pageRequest, total);
-     }
 
 
 }

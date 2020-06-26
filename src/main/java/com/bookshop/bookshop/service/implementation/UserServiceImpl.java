@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.service.implementation;
 
 import com.bookshop.bookshop.exception.ResourceNotFoundException;
+import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.*;
@@ -10,10 +11,18 @@ import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
 import com.bookshop.bookshop.service.UserService;
+import com.bookshop.bookshop.util.ValidatePageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -83,5 +92,31 @@ public class UserServiceImpl implements UserService {
         Boolean isAvailable = !loveRepository.existsByStoryIdAndUserId(storyId, userId);
 
         return new LoveAvailability(isAvailable);
+    }
+
+    @Override
+    public UserStoryCount getUserStoriesStatistics(long userId, UserPrincipal currentUser, int page, int size) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Long> userLovedStoryIds = loveRepository.findLoveStoryIdsByUserId(user.getId(), pageable);
+
+        List<Long> storyIds = userLovedStoryIds.getContent();
+
+        long userStoriesCount = storyRepository.countByCreatedBy(user.getId());
+
+        long totalLovedByUser = loveRepository.countByUserId(user.getId());
+
+        Page<Story> storiesPage = storyRepository.findByCreatedBy(user.getId(), pageable);
+
+        List<Long> stories = storiesPage.map(Story::getId).getContent();
+
+        List<Love> loves = loveRepository.findByStoryIdIn(stories);
+
+        long totalLovesOnUserStories = loves.stream().count();
+
+       return new UserStoryCount(userStoriesCount, totalLovedByUser, totalLovesOnUserStories);
+
     }
 }

@@ -30,4 +30,6 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
     @Query("select u from Story u where lower(u.title) like lower(concat('%', :title,'%'))")
     public Page<Story> findByTitle(@Param("title") String title, Pageable pageable);
 
+
+
 }

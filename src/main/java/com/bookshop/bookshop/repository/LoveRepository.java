@@ -19,6 +19,9 @@ public interface LoveRepository extends JpaRepository<Love, Long> {
     @Query("SELECT v FROM Love v where v.user.id = :userId and v.story.id in :storyIds")
     List<Love> findByUserIdAndStoryIdIn(@Param("userId") Long userId, @Param("storyIds") List<Long> storyIds);
 
+    @Query("SELECT v FROM Love v where v.story.id in :storyIds")
+    List<Love> findByStoryIdIn(@Param("storyIds") List<Long> storyIds);
+
     @Query("SELECT v FROM Love v where v.user.id = :userId and v.story.id in :storyId")
     Love findByUserIdAndStoryId(@Param("userId") Long userId, @Param("storyId") Long storyId);
 

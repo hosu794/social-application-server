@@ -20,4 +20,6 @@ public interface UserService {
 
     LoveAvailability checkIsUserLovedStory(Long storyId, Long userId);
 
+    public UserStoryCount getUserStoriesStatistics(long userId, UserPrincipal currentUser, int page, int size);
+
 }
