@@ -1,16 +1,15 @@
 package com.bookshop.bookshop.service.implementation;
 
 import com.bookshop.bookshop.exception.AppException;
+import com.bookshop.bookshop.exception.ResourceNotFoundException;
 import com.bookshop.bookshop.model.Role;
 import com.bookshop.bookshop.model.RoleName;
 import com.bookshop.bookshop.model.User;
-import com.bookshop.bookshop.payload.ApiResponse;
-import com.bookshop.bookshop.payload.JwtAuthenticationResponse;
-import com.bookshop.bookshop.payload.LoginRequest;
-import com.bookshop.bookshop.payload.SignUpRequest;
+import com.bookshop.bookshop.payload.*;
 import com.bookshop.bookshop.repository.RoleRepository;
 import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.JwtTokenProvider;
+import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.AuthenticationService;
 import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,5 +104,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
 
+    }
+
+    public ResponseEntity<?> updateName(UserPrincipal currentUser, UpdateNameRequest updateNameRequest) {
+       User user = userRepository.findById(currentUser.getId())
+               .orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+       if(userRepository.existsByName(updateNameRequest.getName())) {
+           return new ResponseEntity(new ApiResponse(false, "Name already in user"), HttpStatus.BAD_REQUEST);
+       }
+
+       user.setName(updateNameRequest.getName());
+
+       User result =  userRepository.save(user);
+
+       return ResponseEntity.ok().body(new ApiResponse(true, "User name updated successfully"));
+
+    }
+
+
+    public ResponseEntity<?> updatePassword(UserPrincipal currentUser, UpdatePasswordRequest updatePasswordRequest) {
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(( ) -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getPassword()));
+
+        User result = userRepository.save(user);
+
+        return ResponseEntity.ok().body(new ApiResponse(true, "User password updated successfully"));
     }
 }

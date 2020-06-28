@@ -3,9 +3,7 @@ package com.bookshop.bookshop.controller;
 import com.bookshop.bookshop.model.Role;
 import com.bookshop.bookshop.model.RoleName;
 import com.bookshop.bookshop.model.User;
-import com.bookshop.bookshop.payload.ApiResponse;
-import com.bookshop.bookshop.payload.LoginRequest;
-import com.bookshop.bookshop.payload.SignUpRequest;
+import com.bookshop.bookshop.payload.*;
 import com.bookshop.bookshop.repository.RoleRepository;
 import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.JwtTokenProvider;
@@ -117,6 +115,60 @@ public class AuthenticationServiceTest {
 
         Assert.assertEquals(HttpStatus.OK, authenticationService.authenticateUser(loginRequest).getStatusCode());
         Assert.assertNotNull(authenticationService.authenticateUser(loginRequest).getBody());
+
+    }
+
+    @Test
+    public void should_return_updateName() throws Exception {
+
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setPassword("Password");
+        user.setId((long) 12);
+        user.setUsername("Username");
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+        user.setEmail("grzechu@gmail.com");
+        user.setName("Beautiful Name");
+
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+        UpdateNameRequest updateNameRequest = new UpdateNameRequest("New Name");
+
+        Mockito.when(userRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.existsByName(ArgumentMatchers.anyString())).thenReturn(false);
+
+        user.setName(updateNameRequest.getName());
+
+
+
+
+      Assert.assertEquals(200, authenticationService.updateName(userPrincipal, updateNameRequest).getStatusCodeValue());
+        Assert.assertNotNull(authenticationService.updateName(userPrincipal, updateNameRequest).getBody());
+    }
+
+    @Test
+    public void should_return_updatePassword() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setPassword("Password");
+        user.setId((long) 12);
+        user.setUsername("Username");
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+        user.setEmail("grzechu@gmail.com");
+        user.setName("Beautiful Name");
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("newpassword");
+
+        Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
+
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getPassword()));
+
+        Assert.assertEquals(200, authenticationService.updatePassword(userPrincipal, updatePasswordRequest).getStatusCodeValue());
+        Assert.assertNotNull(authenticationService.updatePassword(userPrincipal, updatePasswordRequest).getBody());
+
 
     }
 
