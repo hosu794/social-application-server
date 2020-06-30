@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.util.Collections;
 
@@ -132,5 +133,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User result = userRepository.save(user);
 
         return ResponseEntity.ok().body(new ApiResponse(true, "User password updated successfully"));
+    }
+
+    public ResponseEntity<?> updateUsername(UserPrincipal currentUser, UpdateUsernameRequest updateUsernameRequest) {
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+        if(userRepository.existsByUsername(updateUsernameRequest.getUsername())) {
+            return new ResponseEntity<>(new ApiResponse(false, "Username already in user"), HttpStatus.BAD_REQUEST);
+        }
+
+        user.setUsername(updateUsernameRequest.getUsername());
+
+        User result = userRepository.save(user);
+
+        return ResponseEntity.ok(new ApiResponse(true, "User username updated successfully"));
     }
 }

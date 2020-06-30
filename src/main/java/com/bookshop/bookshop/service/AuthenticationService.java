@@ -1,9 +1,6 @@
 package com.bookshop.bookshop.service;
 
-import com.bookshop.bookshop.payload.LoginRequest;
-import com.bookshop.bookshop.payload.SignUpRequest;
-import com.bookshop.bookshop.payload.UpdateNameRequest;
-import com.bookshop.bookshop.payload.UpdatePasswordRequest;
+import com.bookshop.bookshop.payload.*;
 import com.bookshop.bookshop.security.UserPrincipal;
 import org.springframework.http.ResponseEntity;
 
@@ -16,4 +13,6 @@ public interface AuthenticationService {
     public ResponseEntity<?> updateName(UserPrincipal currentUser, UpdateNameRequest updateNameRequest);
 
     public ResponseEntity<?> updatePassword(UserPrincipal currentUser, UpdatePasswordRequest updatePasswordRequest);
+
+    public ResponseEntity<?> updateUsername(UserPrincipal currentUser, UpdateUsernameRequest updateUsernameRequest);
 }

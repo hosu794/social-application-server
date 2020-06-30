@@ -57,4 +57,10 @@ public class AuthenticationController {
         return authenticationService.updatePassword(currentUser, updatePasswordRequest);
     }
 
+    @PutMapping("/update/username")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> updateUsername(@CurrentUser UserPrincipal currentUser, @Valid @RequestBody UpdateUsernameRequest updateUsernameRequest) {
+        return authenticationService.updateUsername(currentUser, updateUsernameRequest);
+    }
+
 }

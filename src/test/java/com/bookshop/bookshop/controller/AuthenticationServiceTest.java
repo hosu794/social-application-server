@@ -1,5 +1,6 @@
 package com.bookshop.bookshop.controller;
 
+import com.bookshop.bookshop.exception.BadRequestException;
 import com.bookshop.bookshop.model.Role;
 import com.bookshop.bookshop.model.RoleName;
 import com.bookshop.bookshop.model.User;
@@ -13,8 +14,10 @@ import com.bookshop.bookshop.service.implementation.AuthenticationServiceImpl;
 import com.sun.org.apache.xpath.internal.Arg;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.assertj.core.api.AbstractAssert;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -173,8 +176,34 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void should_return_deleteByTitle() throws Exception {}
+    public void should_return_updateUsername() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setPassword("Password");
+        user.setId(434L);
+        user.setUsername("albert123");
+        user.setCreatedAt(createdAt);
+        user.setUpdatedAt(createdAt);
+        user.setEmail("example@example.com");
+        user.setName("Example name");
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
 
+        UpdateUsernameRequest updateUsernameRequest = new UpdateUsernameRequest("newusername");
+
+        Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.existsByUsername(ArgumentMatchers.anyString())).thenReturn(false);
+
+        user.setUsername(updateUsernameRequest.getUsername());
+
+
+
+        Assert.assertEquals(200, authenticationService.updateUsername(userPrincipal, updateUsernameRequest).getStatusCodeValue());
+        Assert.assertNotNull(authenticationService.updateUsername(userPrincipal, updateUsernameRequest).getBody());
+
+
+    }
+
+ 
     private String generateMockToken(String secret, int expirationTime, UserPrincipal userPrincipal) {
 
         Date now = new Date();
