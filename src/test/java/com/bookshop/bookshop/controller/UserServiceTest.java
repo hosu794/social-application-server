@@ -34,7 +34,7 @@ import java.util.Optional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(MockitoJUnitRunner.class)
-public class UserControllerTest {
+public class UserServiceTest {
 
     UserRepository userRepository = Mockito.mock(UserRepository.class);
     StoryRepository storyRepository = Mockito.mock(StoryRepository.class);
@@ -102,6 +102,7 @@ public class UserControllerTest {
         Assert.assertEquals(true, userService.checkEmailAvailability(emailRequest).getAvailable());
     }
 
+    
     @Test
     public void should_return_getUserProfile() throws Exception {
         Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
