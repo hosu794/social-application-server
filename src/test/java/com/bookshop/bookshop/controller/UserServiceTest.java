@@ -264,6 +264,9 @@ public class UserServiceTest {
 
     }
 
+    @Test
+    public void should_return_upload_image() throws Exception {}
+
 
 
 
