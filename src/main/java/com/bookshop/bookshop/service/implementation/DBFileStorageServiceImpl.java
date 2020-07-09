@@ -9,11 +9,11 @@ import com.bookshop.bookshop.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -22,23 +22,7 @@ public class DBFileStorageServiceImpl {
     @Autowired
     private DBFileRepository dbFileRepository;
 
-    public DBFile storeFile(MultipartFile file) {
-        String normalizedFilename = StringUtils.cleanPath(file.getOriginalFilename());
 
-        try {
-            // Check if the file's name contains invalid characters
-            boolean isNameContainsInvalidCharacters = normalizedFilename.contains("..");
-            if(isNameContainsInvalidCharacters) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + normalizedFilename);
-            }
-
-            DBFile dbFile = new DBFile(normalizedFilename, file.getContentType(), file.getBytes());
-
-            return dbFileRepository.save(dbFile);
-        } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + normalizedFilename + ". Please try again!", ex);
-        }
-    }
 
     public DBFile storeAvatar(MultipartFile file, UserPrincipal currentUser) {
 

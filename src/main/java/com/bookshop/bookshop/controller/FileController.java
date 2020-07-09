@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 
 @RestController
+@RequestMapping("/api")
 public class FileController {
 
     private static final Logger logger = LoggerFactory
@@ -32,42 +34,26 @@ public class FileController {
     @Autowired
     private DBFileStorageServiceImpl dbFileStorageService;
 
-    @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        DBFile dbFile = dbFileStorageService.storeFile(file);
-
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
-                .path(String.valueOf(dbFile.getId()))
-                .toUriString();
-
-        return new UploadFileResponse(dbFile.getFilename(), fileDownloadUri,
-                file.getContentType());
-    }
-
-    @PostMapping("/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.asList(files)
-                .stream()
-                .map(file -> uploadFile(file))
-                .collect(Collectors.toList());
-    }
 
     @PutMapping("/uploadAvatar")
+    @PreAuthorize("hasRole('USER')")
     public UploadFileResponse uploadAvatar(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal currentUser) {
         DBFile dbFile = dbFileStorageService.storeAvatar(file, currentUser);
 
 
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/api/downloadFile/")
                 .path(String.valueOf(dbFile.getId()))
                 .toUriString();
 
-        return new UploadFileResponse(currentUser.getId().toString(), fileDownloadUri, file.getContentType());
+        String message = "Avatar update successfully";
+
+        return new UploadFileResponse(currentUser.getId().toString(), fileDownloadUri, file.getContentType(), message);
     }
 
     @GetMapping("/downloadFile/{fileId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
         // Load file from database
         DBFile foundFile = dbFileStorageService.getFile(fileId);
@@ -80,6 +66,7 @@ public class FileController {
 
 
     @GetMapping("/downloadFile/name/{filename}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> downloadFileByFilename(@PathVariable String filename) {
         DBFile foundFile = dbFileStorageService.getFileByFilename(filename);
 
@@ -93,6 +80,7 @@ public class FileController {
 
 
     @GetMapping("/user/avatar")
+    @PreAuthorize("hasRole('USER')")
     public UploadFileResponse getDownloadLink(@CurrentUser UserPrincipal currentUser) {
         DBFile foundFile = dbFileStorageService.getFileByFilename(currentUser.getId().toString());
 

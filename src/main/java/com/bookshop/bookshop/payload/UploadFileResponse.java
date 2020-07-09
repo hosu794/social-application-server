@@ -5,6 +5,7 @@ public class UploadFileResponse {
     private String filename;
     private String fileDownloadUri;
     private String fileType;
+    private String message;
 
 
     public UploadFileResponse(String filename, String fileDownloadUri, String fileType) {
@@ -12,6 +13,21 @@ public class UploadFileResponse {
         this.fileDownloadUri = fileDownloadUri;
         this.fileType = fileType;
 
+    }
+
+    public UploadFileResponse(String filename, String fileDownloadUri, String fileType, String message) {
+        this.filename = filename;
+        this.fileDownloadUri = fileDownloadUri;
+        this.fileType = fileType;
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public UploadFileResponse() {}

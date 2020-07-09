@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         DBFile foundFile = dbFileStorageService.getFileByFilename(user.getId().toString());
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/api/downloadFile/")
                 .path(String.valueOf(foundFile.getId()))
                 .toUriString();
 
