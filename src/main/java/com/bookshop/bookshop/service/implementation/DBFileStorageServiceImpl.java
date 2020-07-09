@@ -23,28 +23,26 @@ public class DBFileStorageServiceImpl {
     private DBFileRepository dbFileRepository;
 
     public DBFile storeFile(MultipartFile file) {
-        // Normalize file name
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String normalizedFilename = StringUtils.cleanPath(file.getOriginalFilename());
 
         try {
             // Check if the file's name contains invalid characters
-            if(fileName.contains("..")) {
-                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+            boolean isNameContainsInvalidCharacters = normalizedFilename.contains("..");
+            if(isNameContainsInvalidCharacters) {
+                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + normalizedFilename);
             }
 
-            DBFile dbFile = new DBFile(fileName, file.getContentType(), file.getBytes());
+            DBFile dbFile = new DBFile(normalizedFilename, file.getContentType(), file.getBytes());
 
             return dbFileRepository.save(dbFile);
         } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
+            throw new FileStorageException("Could not store file " + normalizedFilename + ". Please try again!", ex);
         }
     }
 
-    public DBFile   storeAvatar(MultipartFile file, UserPrincipal currentUser) {
+    public DBFile storeAvatar(MultipartFile file, UserPrincipal currentUser) {
 
         boolean isAvatarExists = dbFileRepository.existsByFilename(currentUser.getId().toString());
-
-        System.out.println(isAvatarExists);
 
         if(isAvatarExists) {
 
@@ -78,6 +76,11 @@ public class DBFileStorageServiceImpl {
     public DBFile getFile(Long fileId) {
         return dbFileRepository.findById(fileId)
                 .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + fileId));
+    }
+
+    public DBFile getFileByFilename(String filename) {
+        return dbFileRepository.findByFilename(filename)
+                .orElseThrow(() -> new MyFileNotFoundException("File not found with id" + filename));
     }
 
 }

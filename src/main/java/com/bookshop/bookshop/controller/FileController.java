@@ -70,12 +70,24 @@ public class FileController {
     @GetMapping("/downloadFile/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
         // Load file from database
-        DBFile dbFile = dbFileStorageService.getFile(fileId);
+        DBFile foundFile = dbFileStorageService.getFile(fileId);
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(dbFile.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbFile.getFilename() + "\"")
-                .body(new ByteArrayResource(dbFile.getData()));
+                .contentType(MediaType.parseMediaType(foundFile.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + foundFile.getFilename() + "\"")
+                .body(new ByteArrayResource(foundFile.getData()));
     }
 
+
+    @GetMapping("/downloadFile/name/{filename}")
+    public ResponseEntity<Resource> downloadFileByFilename(@PathVariable String filename) {
+        DBFile foundFile = dbFileStorageService.getFileByFilename(filename);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(foundFile.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + foundFile.getFilename() + "\"")
+                .body(new ByteArrayResource(foundFile.getData()));
+
+
+    }
 }
