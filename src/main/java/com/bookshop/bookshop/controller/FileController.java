@@ -3,6 +3,8 @@ package com.bookshop.bookshop.controller;
 
 import com.bookshop.bookshop.model.DBFile;
 import com.bookshop.bookshop.payload.UploadFileResponse;
+import com.bookshop.bookshop.security.CurrentUser;
+import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.implementation.DBFileStorageServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,7 @@ public class FileController {
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
-                .path(dbFile.getId())
+                .path(String.valueOf(dbFile.getId()))
                 .toUriString();
 
         return new UploadFileResponse(dbFile.getFilename(), fileDownloadUri,
@@ -51,8 +53,22 @@ public class FileController {
                 .collect(Collectors.toList());
     }
 
+    @PutMapping("/uploadAvatar")
+    public UploadFileResponse uploadAvatar(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal currentUser) {
+        DBFile dbFile = dbFileStorageService.storeAvatar(file, currentUser);
+
+
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(String.valueOf(dbFile.getId()))
+                .toUriString();
+
+        return new UploadFileResponse(currentUser.getId().toString(), fileDownloadUri, file.getContentType(), file.getSize());
+    }
+
     @GetMapping("/downloadFile/{fileId}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) {
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
         // Load file from database
         DBFile dbFile = dbFileStorageService.getFile(fileId);
 

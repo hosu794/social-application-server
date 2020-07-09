@@ -9,9 +9,8 @@ import javax.persistence.*;
 public class DBFile {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
 
     private String filename;
@@ -26,11 +25,20 @@ public class DBFile {
     }
 
 
-    public DBFile(String id, String filename, String fileType, byte[] data) {
+    public DBFile(long id, String filename, String fileType, byte[] data) {
         this.id = id;
         this.filename = filename;
         this.fileType = fileType;
         this.data = data;
+    }
+
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public DBFile(String filename, String fileType, byte[] data) {
@@ -39,13 +47,7 @@ public class DBFile {
         this.data = data;
     }
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getFilename() {
         return filename;
