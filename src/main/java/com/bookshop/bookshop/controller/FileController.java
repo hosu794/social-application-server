@@ -42,7 +42,7 @@ public class FileController {
                 .toUriString();
 
         return new UploadFileResponse(dbFile.getFilename(), fileDownloadUri,
-                file.getContentType(), file.getSize());
+                file.getContentType());
     }
 
     @PostMapping("/uploadMultipleFiles")
@@ -64,7 +64,7 @@ public class FileController {
                 .path(String.valueOf(dbFile.getId()))
                 .toUriString();
 
-        return new UploadFileResponse(currentUser.getId().toString(), fileDownloadUri, file.getContentType(), file.getSize());
+        return new UploadFileResponse(currentUser.getId().toString(), fileDownloadUri, file.getContentType());
     }
 
     @GetMapping("/downloadFile/{fileId}")
@@ -90,4 +90,18 @@ public class FileController {
 
 
     }
+
+
+    @GetMapping("/user/avatar")
+    public UploadFileResponse getDownloadLink(@CurrentUser UserPrincipal currentUser) {
+        DBFile foundFile = dbFileStorageService.getFileByFilename(currentUser.getId().toString());
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(String.valueOf(foundFile.getId()))
+                .toUriString();
+
+        return new UploadFileResponse(currentUser.getId().toString(), fileDownloadUri, foundFile.getFileType());
+    }
+
 }

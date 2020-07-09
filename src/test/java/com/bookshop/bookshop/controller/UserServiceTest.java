@@ -12,6 +12,7 @@ import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.StoryService;
 import com.bookshop.bookshop.service.UserService;
+import com.bookshop.bookshop.service.implementation.DBFileStorageServiceImpl;
 import com.bookshop.bookshop.service.implementation.StoryServiceImpl;
 import com.bookshop.bookshop.service.implementation.UserServiceImpl;
 import com.bookshop.bookshop.util.MockUtil;
@@ -40,7 +41,8 @@ public class UserServiceTest {
     StoryRepository storyRepository = Mockito.mock(StoryRepository.class);
     LoveRepository loveRepository = Mockito.mock(LoveRepository.class);
     StoryService storyService = Mockito.mock(StoryService.class);
-    UserServiceImpl userService = new UserServiceImpl(userRepository, storyRepository, loveRepository, storyService);
+    DBFileStorageServiceImpl dbFileStorageService = Mockito.mock(DBFileStorageServiceImpl.class);
+    UserServiceImpl userService = new UserServiceImpl(userRepository, storyRepository, loveRepository, storyService, dbFileStorageService);
 
     @Test
     public void should_return_current_user() throws Exception {

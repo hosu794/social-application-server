@@ -1,10 +1,12 @@
 package com.bookshop.bookshop.service.implementation;
 
 import com.bookshop.bookshop.exception.ResourceNotFoundException;
+import com.bookshop.bookshop.model.DBFile;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.*;
+import com.bookshop.bookshop.repository.DBFileRepository;
 import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
 import com.bookshop.bookshop.repository.UserRepository;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,11 +34,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, StoryRepository storyRepository, LoveRepository loveRepository, StoryService storyService) {
+    public UserServiceImpl(UserRepository userRepository, StoryRepository storyRepository, LoveRepository loveRepository, StoryService storyService, DBFileStorageServiceImpl dbFileStorageService) {
         this.userRepository = userRepository;
         this.storyRepository = storyRepository;
         this.loveRepository = loveRepository;
         this.storyService = storyService;
+        this.dbFileStorageService = dbFileStorageService;
     }
 
 
@@ -43,10 +47,25 @@ public class UserServiceImpl implements UserService {
     StoryRepository storyRepository;
     LoveRepository loveRepository;
     StoryService storyService;
+    DBFileStorageServiceImpl dbFileStorageService;
+
 
     @Override
     public UserSummary getCurrentUser(UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName());
+
+
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+        DBFile foundFile = dbFileStorageService.getFileByFilename(user.getId().toString());
+
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(String.valueOf(foundFile.getId()))
+                .toUriString();
+
+        UserSummary userSummary = new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName(), fileDownloadUri);
+
         return userSummary;
     }
 
@@ -68,6 +87,9 @@ public class UserServiceImpl implements UserService {
     public UserProfile getUserProfile(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
+
+
+
         long storyCount = storyRepository.countByCreatedBy(user.getId());
         long loveCount = loveRepository.countByUserId(user.getId());
 
