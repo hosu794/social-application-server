@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -32,7 +29,12 @@ public class FileController {
             .getLogger(FileController.class);
 
     @Autowired
-    private DBFileStorageServiceImpl dbFileStorageService;
+    public FileController(DBFileStorageServiceImpl dbFileStorageService) {
+        this.dbFileStorageService = dbFileStorageService;
+    }
+
+
+    final private DBFileStorageServiceImpl dbFileStorageService;
 
 
     @PutMapping("/uploadAvatar")
@@ -55,8 +57,8 @@ public class FileController {
     @GetMapping("/downloadFile/{fileId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
-        // Load file from database
-        DBFile foundFile = dbFileStorageService.getFile(fileId);
+
+        DBFile foundFile = dbFileStorageService.getFileById(fileId);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(foundFile.getFileType()))
@@ -85,7 +87,7 @@ public class FileController {
         DBFile foundFile = dbFileStorageService.getFileByFilename(currentUser.getId().toString());
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+                .path("/api/downloadFile/")
                 .path(String.valueOf(foundFile.getId()))
                 .toUriString();
 

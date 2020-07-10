@@ -1,9 +1,6 @@
 package com.bookshop.bookshop.controller;
 
-import com.bookshop.bookshop.model.Love;
-import com.bookshop.bookshop.model.Story;
-import com.bookshop.bookshop.model.Topic;
-import com.bookshop.bookshop.model.User;
+import com.bookshop.bookshop.model.*;
 import com.bookshop.bookshop.payload.*;
 import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
@@ -25,6 +22,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.support.ArgumentConvertingMethodInvoker;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.swing.text.html.Option;
 import java.text.SimpleDateFormat;
@@ -32,6 +32,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static ch.qos.logback.core.encoder.ByteArrayUtil.hexStringToByteArray;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(MockitoJUnitRunner.class)
@@ -55,9 +57,20 @@ public class UserServiceTest {
         user.setUpdatedAt(createdAt);
         user.setEmail("grzechu@gmail.com");
 
+
         UserPrincipal userPrincipal = UserPrincipal.create(user);
 
         UserSummary userSummary = new UserSummary(user.getId(), user.getUsername(), user.getName());
+
+        Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
+        byte[] CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
+
+        DBFile dbFile = new DBFile("Example Filename", "image", CDRIVES);
+        Mockito.when(dbFileStorageService.getFileByFilename(ArgumentMatchers.anyString())).thenReturn(dbFile);
 
         Assert.assertEquals(userSummary.getName(), userService.getCurrentUser(userPrincipal).getName());
 
@@ -76,8 +89,11 @@ public class UserServiceTest {
 
         UserPrincipal userPrincipal = UserPrincipal.create(user);
 
+
         UsernameRequest usernameRequest = new UsernameRequest();
         usernameRequest.setUsername(user.getName());
+
+
         Assert.assertEquals(true, userService.checkUsernameAvailability(usernameRequest).getAvailable());
 
     }
@@ -97,6 +113,8 @@ public class UserServiceTest {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
 
         Mockito.when(userRepository.existsByEmail(ArgumentMatchers.anyString())).thenReturn(false);
+
+
 
         EmailRequest emailRequest = new EmailRequest();
         emailRequest.setEmail(user.getEmail());

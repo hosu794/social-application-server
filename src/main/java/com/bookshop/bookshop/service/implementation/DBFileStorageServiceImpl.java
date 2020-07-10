@@ -6,6 +6,9 @@ import com.bookshop.bookshop.exception.ResourceNotFoundException;
 import com.bookshop.bookshop.model.DBFile;
 import com.bookshop.bookshop.repository.DBFileRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
+import com.bookshop.bookshop.service.DBFileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +20,16 @@ import java.io.IOException;
 
 @Service
 @Transactional
-public class DBFileStorageServiceImpl {
+public class DBFileStorageServiceImpl implements DBFileStorageService {
 
     @Autowired
-    private DBFileRepository dbFileRepository;
+    public DBFileStorageServiceImpl(DBFileRepository dbFileRepository) {
+        this.dbFileRepository = dbFileRepository;
+    }
 
+    final private static Logger logger = LoggerFactory.getLogger(DBFileStorageServiceImpl.class);
 
+    final private DBFileRepository dbFileRepository;
 
     public DBFile storeAvatar(MultipartFile file, UserPrincipal currentUser) {
 
@@ -33,7 +40,6 @@ public class DBFileStorageServiceImpl {
             try {
               DBFile currentUserAvatar = dbFileRepository.findByFilename(currentUser.getId().toString())
                       .orElseThrow(() -> new ResourceNotFoundException("Avatar", "filename", currentUser.getId().toString()));
-
 
                 currentUserAvatar.setData(file.getBytes());
 
@@ -57,7 +63,7 @@ public class DBFileStorageServiceImpl {
 
     }
 
-    public DBFile getFile(Long fileId) {
+    public DBFile getFileById(Long fileId) {
         return dbFileRepository.findById(fileId)
                 .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + fileId));
     }
