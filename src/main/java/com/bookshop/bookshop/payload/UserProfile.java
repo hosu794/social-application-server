@@ -15,6 +15,16 @@ public class UserProfile {
 
     private Long loveCount;
 
+    private String avatarDownloadUri;
+
+    public String getAvatarDownloadUri() {
+        return avatarDownloadUri;
+    }
+
+    public void setAvatarDownloadUri(String avatarDownloadUri) {
+        this.avatarDownloadUri = avatarDownloadUri;
+    }
+
     public Long getId() {
         return id;
     }
@@ -70,5 +80,15 @@ public class UserProfile {
         this.joinedAt = joinedAt;
         this.storyCount = storyCount;
         this.loveCount = loveCount;
+    }
+
+    public UserProfile(Long id, String username, String name, Instant joinedAt, Long storyCount, Long loveCount, String avatarDownloadUri) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+        this.joinedAt = joinedAt;
+        this.storyCount = storyCount;
+        this.loveCount = loveCount;
+        this.avatarDownloadUri = avatarDownloadUri;
     }
 }

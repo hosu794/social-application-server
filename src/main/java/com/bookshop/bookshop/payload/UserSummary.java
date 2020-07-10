@@ -5,7 +5,15 @@ public class UserSummary {
     private Long id;
     private String username;
     private String name;
+    private String avatarDownloadUri;
 
+    public String getAvatarDownloadUri() {
+        return avatarDownloadUri;
+    }
+
+    public void setAvatarDownloadUri(String avatarDownloadUri) {
+        this.avatarDownloadUri = avatarDownloadUri;
+    }
 
     public Long getId() {
         return id;
@@ -35,5 +43,12 @@ public class UserSummary {
         this.id = id;
         this.username = username;
         this.name = name;
+    }
+
+    public UserSummary(Long id, String username, String name, String avatarDownloadUri) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+        this.avatarDownloadUri = avatarDownloadUri;
     }
 }

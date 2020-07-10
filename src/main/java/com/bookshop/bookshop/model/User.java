@@ -40,6 +40,8 @@ public class User extends DateAudit {
     @Email
     private String email;
 
+
+
     @NotBlank
     @Size(max = 100)
     private String password;
@@ -78,6 +80,8 @@ public class User extends DateAudit {
         this.password = password;
     }
 
+
+
     public User() {}
 
     public String getAvatar() {
@@ -87,6 +91,8 @@ public class User extends DateAudit {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+
 
     public Long getId() {
         return id;
