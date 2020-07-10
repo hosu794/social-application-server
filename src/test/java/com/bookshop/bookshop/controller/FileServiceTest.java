@@ -31,18 +31,15 @@ import static ch.qos.logback.core.encoder.ByteArrayUtil.hexStringToByteArray;
 @RunWith(MockitoJUnitRunner.class)
 public class FileServiceTest {
 
-
-
     DBFileRepository dbFileRepository = Mockito.mock(DBFileRepository.class);
     DBFileStorageService dbFileStorageService = new DBFileStorageServiceImpl(dbFileRepository);
-
-
-
+ 
 
     @Test
     public void should_return_store_avatar_method() throws Exception {
 
         User user = new User();
+        user.setId(344l);
         user.setUsername("hosu794");
         user.setPassword("password");
         user.setName("Grzegorz Szczęsny");
@@ -59,7 +56,12 @@ public class FileServiceTest {
         Mockito.when(dbFileRepository.findByFilename(ArgumentMatchers.anyString())).thenReturn(Optional.of(dbFile));
         Mockito.when(dbFileRepository.save(ArgumentMatchers.any())).thenReturn(dbFile);
 
-        Assert.assertNotNull(dbFileStorageService.storeAvatar(firstFile, userPrincipal));
+
+        Assert.assertEquals(dbFile.getFilename(), dbFileStorageService.storeAvatar(firstFile, userPrincipal).getFilename());
+        Assert.assertEquals(dbFile.getFileType(), dbFileStorageService.storeAvatar(firstFile, userPrincipal).getFileType());
+        Assert.assertNotNull(dbFileStorageService.storeAvatar(firstFile, userPrincipal).getData());
+
+
     }
 
     @Test
