@@ -85,7 +85,15 @@ public class FileServiceTest {
         Assert.assertEquals(dbFile.getFilename(), dbFileStorageService.getFileByFilename("Some Filename").getFilename());
     }
 
-    
+    @Test
+    public void should_return_getFileByFilename_and_return() throws Exception {
+        byte[] CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
+        DBFile dbFile = new DBFile("Example Filename", "image", CDRIVES);
+
+        Mockito.when(dbFileRepository.findByFilename(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+
+        Assert.assertEquals(dbFileStorageService.getFileByFilename("Some name"), null);
+    }
 
 
 }
