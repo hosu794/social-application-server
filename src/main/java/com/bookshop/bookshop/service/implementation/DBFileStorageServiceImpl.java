@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 
 @Service
@@ -69,8 +70,21 @@ public class DBFileStorageServiceImpl implements DBFileStorageService {
     }
 
     public DBFile getFileByFilename(String filename) {
-        return dbFileRepository.findByFilename(filename)
-                .orElseThrow(() -> new MyFileNotFoundException("File not found with id" + filename));
+
+        Optional<DBFile> foundFile = dbFileRepository.findByFilename(filename);
+
+        if(foundFile.isPresent()) {
+            return dbFileRepository.findByFilename(filename)
+                    .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + filename));
+        } else {
+
+            //Returning a null value if current user doesn't set avatar
+            return null;
+        }
+
+
+
+
     }
 
 }

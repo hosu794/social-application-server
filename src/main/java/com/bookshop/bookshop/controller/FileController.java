@@ -42,8 +42,6 @@ public class FileController {
     public UploadFileResponse uploadAvatar(@RequestParam("file") MultipartFile file, @CurrentUser UserPrincipal currentUser) {
         DBFile dbFile = dbFileStorageService.storeAvatar(file, currentUser);
 
-
-
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/downloadFile/")
                 .path(String.valueOf(dbFile.getId()))

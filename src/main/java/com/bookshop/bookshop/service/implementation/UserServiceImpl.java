@@ -24,7 +24,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,14 +61,19 @@ public class UserServiceImpl implements UserService {
 
         DBFile foundFile = dbFileStorageService.getFileByFilename(user.getId().toString());
 
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/downloadFile/")
-                .path(String.valueOf(foundFile.getId()))
-                .toUriString();
+        boolean isAvatarExist = foundFile == null;
 
-        UserSummary userSummary = new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName(), fileDownloadUri);
+        if(isAvatarExist) {
+            return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+        } else {
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/downloadFile/")
+                    .path(String.valueOf(foundFile.getId()))
+                    .toUriString();
+            return new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName(), fileDownloadUri);
 
-        return userSummary;
+        }
+
     }
 
     @Override
