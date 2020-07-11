@@ -73,12 +73,12 @@ public class DBFileStorageServiceImpl implements DBFileStorageService {
 
         Optional<DBFile> foundFile = dbFileRepository.findByFilename(filename);
 
-        if(foundFile.isPresent()) {
+        boolean isAvatarExists = foundFile.isPresent();
+
+        if(isAvatarExists) {
             return dbFileRepository.findByFilename(filename)
                     .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + filename));
         } else {
-
-            //Returning a null value if current user doesn't set avatar
             return null;
         }
 

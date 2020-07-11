@@ -61,17 +61,16 @@ public class UserServiceImpl implements UserService {
 
         DBFile foundFile = dbFileStorageService.getFileByFilename(user.getId().toString());
 
-        boolean isAvatarExist = foundFile == null;
+        boolean isAvatarExist = foundFile != null;
 
         if(isAvatarExist) {
-            return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
-        } else {
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                     .path("/api/downloadFile/")
                     .path(String.valueOf(foundFile.getId()))
                     .toUriString();
             return new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName(), fileDownloadUri);
-
+        } else {
+            return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
         }
 
     }
