@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api")
 public class FileController {
 
