@@ -53,7 +53,6 @@ public class FileController {
     }
 
     @GetMapping("/downloadFile/{fileId}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
 
         DBFile foundFile = dbFileStorageService.getFileById(fileId);
@@ -66,7 +65,6 @@ public class FileController {
 
 
     @GetMapping("/downloadFile/name/{filename}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Resource> downloadFileByFilename(@PathVariable String filename) {
         DBFile foundFile = dbFileStorageService.getFileByFilename(filename);
 

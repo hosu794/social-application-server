@@ -90,6 +90,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/topics", "/api/topics/{topicId}")
 
                 .permitAll()
+                .antMatchers("/api/downloadFile/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
 
