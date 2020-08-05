@@ -36,6 +36,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
@@ -666,6 +667,69 @@ public class StoryServiceTest {
         Assertions.assertThrows(BadRequestException.class, () -> {
             storyService.deleteStory(ArgumentMatchers.anyLong(), userPrincipal);
         });
+
+    }
+
+    @Test
+    public void should_return_updateStory() throws Exception {
+        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+        User user = new User();
+        user.setUsername("hosu794");
+        user.setName("Grzegorz Szczęsny");
+        user.setEmail("grzesszesny14@gmail.com");
+        user.setId((long) 12432);
+        user.setUpdatedAt(createdAt);
+        user.setCreatedAt(createdAt);
+
+
+
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
+
+        Topic topic = new Topic();
+        topic.setCreatedBy(user.getId());
+        topic.setCreatedAt(createdAt);
+        topic.setTitle("Title of the topic");
+        topic.setUpdatedAt(createdAt);
+        topic.setCreatedAt(createdAt);
+        topic.setDescription("Description");
+        topic.setId((long) 23422434);
+
+        Story story = new Story();
+        story.setCreatedBy(user.getId());
+        story.setCreatedAt(createdAt);
+        story.setUpdatedAt(createdAt);
+        story.setTitle("Title of the story");
+        story.setDescription("Description of the story");
+        story.setId((long) 233);
+        story.setBody("Body");
+        story.setTopic(topic);
+
+        StoryRequest storyRequest = new StoryRequest("title", "body", "description");
+
+        Story updatedStory = new Story();
+        updatedStory.setCreatedBy(user.getId());
+        updatedStory.setCreatedAt(createdAt);
+        updatedStory.setUpdatedAt(createdAt);
+        updatedStory.setTitle("Title of updated story");
+        updatedStory.setDescription("Description of updated story");
+        updatedStory.setId((long) 233);
+        updatedStory.setBody("Body");
+        updatedStory.setTopic(topic);
+
+
+
+        Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
+
+        Mockito.when(storyRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(story));
+
+        Mockito.when(storyRepository.save(ArgumentMatchers.any(Story.class))).thenReturn(updatedStory);
+
+        Mockito.when(loveRepository.countByStoryId(ArgumentMatchers.anyLong())).thenReturn(12l);
+
+
+        Assert.assertEquals(storyService.updateStory(storyRequest, story.getId(), userPrincipal).getDescription(), updatedStory.getDescription());
+        Assert.assertEquals(storyService.updateStory(storyRequest, story.getId(),  userPrincipal).getBody(), updatedStory.getBody());
+
 
     }
 

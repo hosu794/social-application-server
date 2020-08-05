@@ -103,6 +103,11 @@ public class StoryController {
         return storyService.deleteStory(storyId, currentUser);
     }
 
+    @PutMapping("/{storyId}")
+    @PreAuthorize("hasRole('USER')")
+    public StoryResponse updateStory(@CurrentUser UserPrincipal currentUser, @PathVariable Long storyId, @RequestBody StoryRequest storyRequest) {
+        return storyService.updateStory(storyRequest, storyId, currentUser);
+    }
 
 
 }
