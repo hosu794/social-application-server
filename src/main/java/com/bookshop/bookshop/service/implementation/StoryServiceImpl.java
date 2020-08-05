@@ -308,6 +308,33 @@ public class StoryServiceImpl implements StoryService {
 
     }
 
+
+
+
+    public StoryResponse updateStory(StoryRequest storyRequest, Long storyId, UserPrincipal currentUser)  {
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+        Story story = storyRepository.findById(storyId).orElseThrow(() -> new ResourceNotFoundException("Story", "id", storyId));
+
+        long creationId = user.getId();
+
+        long storyCreatorId = story.getCreatedBy();
+
+        if (creationId == storyCreatorId) {
+            story.setTitle(storyRequest.getTitle());
+            story.setBody(storyRequest.getBody());
+            story.setDescription(storyRequest.getDescription());
+
+            Story updatedStory = storyRepository.save(story);
+
+            long storyLoveCount = loveRepository.countByStoryId(storyId);
+
+            return ModelMapper.mapStoryToStoryResponse(updatedStory, user, storyLoveCount);
+        } else {
+            throw new BadRequestException("Sorry you not created this story");
+        }
+    }
+
     public Map<Long, User> getCreatorsIdsAndCreatorOfStories(List<Story> stories) {
 
 

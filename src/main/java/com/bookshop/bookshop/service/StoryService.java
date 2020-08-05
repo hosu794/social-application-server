@@ -44,4 +44,6 @@ public interface StoryService {
     public StoryResponse deleteLoveAndGetUpdateStory(Long userId, UserPrincipal currentUser);
 
     public ResponseEntity<?> deleteStory(Long storyId, UserPrincipal currentUser);
+
+    public StoryResponse updateStory(StoryRequest storyRequest, Long storyId,  UserPrincipal currentUser);
 }
