@@ -16,15 +16,17 @@ public interface CommentService {
 
     public Comment createComment(CommentRequest commentRequest, UserPrincipal currentUser, Long storyId);
 
-    public ResponseEntity<?> deleteComment(Long commentId, Long storyId, UserPrincipal currentUser);
+    public ResponseEntity<?> deleteComment(Long commentId, UserPrincipal currentUser);
 
-    public CommentResponse getCommentById(Long commentId, UserPrincipal currentUser);
+    public CommentResponse getCommentById(Long commentId);
 
-    public PagedResponse<CommentResponse> getAllComment (UserPrincipal currentUser, int page, int size);
+    public PagedResponse<CommentResponse> getAllComment (int page, int size);
 
-    public PagedResponse<CommentResponse> getCommentByCreatedBy(String username, UserPrincipal currentUser, int page, int size);
+    public PagedResponse<CommentResponse> getCommentsByCreatedBy(String username, int page, int size);
 
-    public PagedResponse<CommentResponse> getCommentByStory(Long storyId, UserPrincipal currentUser, int page, int size);
+    public PagedResponse<CommentResponse> getCommentsByUserId(Long userId, int page, int size);
+
+    public PagedResponse<CommentResponse> getCommentsByStoryId(Long storyId, int page, int size);
 
     public CommentResponse updateComment(CommentRequest commentRequest, Long commentId, UserPrincipal currentUser);
 

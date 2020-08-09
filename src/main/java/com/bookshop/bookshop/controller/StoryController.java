@@ -27,15 +27,6 @@ import java.net.URI;
 public class StoryController {
 
     @Autowired
-    private StoryRepository storyRepository;
-
-    @Autowired
-    private LoveRepository loveRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private StoryServiceImpl storyService;
 
     private static final Logger logger = LoggerFactory.getLogger(StoryController.class);

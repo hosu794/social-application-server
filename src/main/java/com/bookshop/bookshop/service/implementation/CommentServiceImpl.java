@@ -25,9 +25,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.management.modelmbean.ModelMBeanAttributeInfo;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+@Service
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
@@ -69,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<?> deleteComment(Long commentId, Long storyId, UserPrincipal currentUser) {
+    public ResponseEntity<?> deleteComment(Long commentId, UserPrincipal currentUser) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
         User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
@@ -88,7 +91,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponse getCommentById(Long commentId, UserPrincipal currentUser) {
+    public CommentResponse getCommentById(Long commentId) {
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
@@ -99,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public PagedResponse<CommentResponse> getAllComment(UserPrincipal currentUser, int page, int size) {
+    public PagedResponse<CommentResponse> getAllComment(int page, int size) {
         ValidatePageUtil.validatePageNumberAndSize(page, size);
 
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "createdAt");
@@ -119,14 +122,58 @@ public class CommentServiceImpl implements CommentService {
         return new PagedResponse<>(commentResponses, comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
     }
 
+
     @Override
-    public PagedResponse<CommentResponse> getCommentByCreatedBy(String username, UserPrincipal currentUser, int page, int size) {
+    public PagedResponse<CommentResponse> getCommentsByUserId(Long userId, int page, int size) {
+        ValidatePageUtil.validatePageNumberAndSize(page, size);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Comment> comments = commentRepository.findByUserId(userId, pageable);
+
+        if(comments.getNumberOfElements() == 0 ) {
+            return new PagedResponse<>(Collections.emptyList(), comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
+        }
+
+        List<CommentResponse> commentResponses = comments.map(comment -> {
+            return ModelMapper.mapCommentToCommentResponse(comment, user);
+        }).getContent();
+
+        return new PagedResponse<>(commentResponses, comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
+
+    }
+
+    @Override
+    public PagedResponse<CommentResponse> getCommentsByStoryId(Long storyId, int page, int size) {
+        ValidatePageUtil.validatePageNumberAndSize(page, size);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Comment> comments = commentRepository.findByStoryId(storyId, pageable);
+
+        List<Comment> commentsContent = comments.getContent();
+
+        Map<Long, User> creatorMap = getCreatorsIdsAncCreatorOfComments(commentsContent);
+
+        if(comments.getNumberOfElements() == 0 ) {
+            return new PagedResponse<>(Collections.emptyList(), comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
+        }
+
+        List<CommentResponse> commentResponses = comments.map(comment -> {
+            return ModelMapper.mapCommentToCommentResponse(comment, creatorMap.get(comment.getCreatedBy()));
+        }).getContent();
+
+        return new PagedResponse<>(commentResponses, comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
+    }
+
+    @Override
+    public PagedResponse<CommentResponse> getCommentsByCreatedBy(String username, int page, int size) {
        ValidatePageUtil.validatePageNumberAndSize(page, size);
 
        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User", "username", username));
 
        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-       Page<Comment> comments = commentRepository.findByUsername(username, pageable);
+       Page<Comment> comments = commentRepository.findByUserId(user.getId(), pageable);
 
        if(comments.getNumberOfElements() == 0) {
            return new PagedResponse<>(Collections.emptyList(), comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
@@ -140,34 +187,6 @@ public class CommentServiceImpl implements CommentService {
 
 
         return new PagedResponse<>(commentResponses, comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
-    }
-
-    @Override
-    public PagedResponse<CommentResponse> getCommentByStory(Long storyId, UserPrincipal currentUser, int page, int size) {
-
-
-
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
-        Page<Comment> comments = commentRepository.findByStoryId(storyId, pageable);
-
-        if(comments.getNumberOfElements() == 0) {
-            return new PagedResponse<>(Collections.emptyList(), comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
-        }
-
-        List<Long> commentsIds = comments.map(Comment::getId).getContent();
-
-
-        List<CommentResponse> commentResponses = comments.map(comment -> {
-
-            Map<Long, User> creatorMap = getCreatorsIdsAncCreatorOfComments(comments.getContent());
-
-
-            return ModelMapper.mapCommentToCommentResponse(comment, creatorMap.get(comment.getCreatedBy()));
-        }).getContent();
-
-
-        return new PagedResponse<>(commentResponses, comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
-
     }
 
     @Override

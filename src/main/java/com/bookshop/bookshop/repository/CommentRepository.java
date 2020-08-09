@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Page<Comment> findByUsername(String username, Pageable pageable);
-
     Page<Comment> findByStoryId(Long storyId, Pageable pageable);
+
+    Page<Comment> findByUserId(Long userId, Pageable pageable);
 
 }
