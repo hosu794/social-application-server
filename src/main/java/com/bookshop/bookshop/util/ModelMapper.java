@@ -1,8 +1,10 @@
 package com.bookshop.bookshop.util;
 
+import com.bookshop.bookshop.model.Comment;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.Topic;
 import com.bookshop.bookshop.model.User;
+import com.bookshop.bookshop.payload.CommentResponse;
 import com.bookshop.bookshop.payload.StoryResponse;
 import com.bookshop.bookshop.payload.TopicResponse;
 import com.bookshop.bookshop.payload.UserSummary;
@@ -41,6 +43,17 @@ public class ModelMapper {
         topicResponse.setcreatedAt(topic.getCreatedAt());
 
         return topicResponse;
+    }
+
+    public static CommentResponse mapCommentToCommentResponse(Comment comment, User creator) {
+        CommentResponse commentResponse = new CommentResponse();
+        commentResponse.setId(comment.getId());
+        commentResponse.setBody(comment.getBody());
+        commentResponse.setCreationDateTime(comment.getCreatedAt());
+        UserSummary userSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
+        commentResponse.setCreatedBy(userSummary);
+
+        return commentResponse;
     }
 
 }

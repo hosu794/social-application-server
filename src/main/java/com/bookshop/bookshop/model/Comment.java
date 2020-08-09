@@ -26,6 +26,11 @@ public class Comment extends UserDateAudit {
     @NotNull
     private Story story;
 
+    @ManyToOne
+    @JoinColumn(name ="user_id", referencedColumnName = "user_id", nullable = false)
+    @NotNull
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -50,5 +55,11 @@ public class Comment extends UserDateAudit {
         this.story = story;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

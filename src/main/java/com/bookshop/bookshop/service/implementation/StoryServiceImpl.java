@@ -197,12 +197,7 @@ public class StoryServiceImpl implements StoryService {
         User creator = userRepository.findById(story.getCreatedBy())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
 
-        //Retrieve love done by logged in user
-        Love userLove = null;
-        if(currentUser != null) {
-            userLove = loveRepository.findByUserIdAndStoryId(currentUser.getId(), storyId);
-        }
-
+        
         long totalLoves = loveRepository.countByStoryId(storyId);
 
         return ModelMapper.mapStoryToStoryResponse(story, creator, totalLoves);
