@@ -28,6 +28,7 @@ public class ModelMapper {
         storyResponse.setTopic(topicResponse);
 
 
+
         return storyResponse;
 
 
@@ -45,11 +46,12 @@ public class ModelMapper {
         return topicResponse;
     }
 
-    public static CommentResponse mapCommentToCommentResponse(Comment comment, User creator) {
+    public static CommentResponse mapCommentToCommentResponse(Comment comment, User creator, StoryResponse story) {
         CommentResponse commentResponse = new CommentResponse();
         commentResponse.setId(comment.getId());
         commentResponse.setBody(comment.getBody());
         commentResponse.setCreationDateTime(comment.getCreatedAt());
+        commentResponse.setStoryResponse(story);
         UserSummary userSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
         commentResponse.setCreatedBy(userSummary);
 

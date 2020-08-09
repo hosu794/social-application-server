@@ -37,8 +37,8 @@ public class Story extends UserDateAudit {
     @NotEmpty(message = "*Please provide the description")
     private String description;
 
-    @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
-    private Collection<Comment> comments;
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "topic_id", nullable = false)
@@ -110,7 +110,7 @@ public class Story extends UserDateAudit {
         return comments;
     }
 
-    public void setComments(Collection<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 }

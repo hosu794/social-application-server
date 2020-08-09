@@ -40,10 +40,10 @@ public class CommentController {
         return commentService.getCommentById(commentId);
     }
 
-    @PostMapping("/story/{storyId}")
+    @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest commentRequest, @PathVariable Long storyId, @CurrentUser UserPrincipal currentUser) {
-        Comment comment =  commentService.createComment(commentRequest, currentUser, storyId);
+    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest commentRequest, @CurrentUser UserPrincipal currentUser) {
+        Comment comment =  commentService.createComment(commentRequest, currentUser, commentRequest.getStoryId());
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{commentId}").buildAndExpand(comment.getId()).toUri();
 
@@ -77,8 +77,8 @@ public class CommentController {
 
     @PutMapping("/{commentId}")
     @PreAuthorize("hasRole('USER')")
-    public CommentResponse updateComment(@CurrentUser UserPrincipal currentUser, @PathVariable Long commentId, CommentRequest commentRequest) {
-        return commentService.updateComment(commentRequest, commentId, currentUser);
+    public CommentResponse updateComment(@CurrentUser UserPrincipal currentUser, @PathVariable Long commentId, @RequestBody @Valid CommentRequest commentRequest) {
+        return commentService.updateComment(commentRequest, commentId, commentRequest.getStoryId(), currentUser);
     }
 
 

@@ -28,7 +28,7 @@ public interface CommentService {
 
     public PagedResponse<CommentResponse> getCommentsByStoryId(Long storyId, int page, int size);
 
-    public CommentResponse updateComment(CommentRequest commentRequest, Long commentId, UserPrincipal currentUser);
+    public CommentResponse updateComment(CommentRequest commentRequest, Long commentId, Long storyId, UserPrincipal currentUser);
 
     public Map<Long, User> getCreatorsIdsAncCreatorOfComments(List<Comment> comments);
 

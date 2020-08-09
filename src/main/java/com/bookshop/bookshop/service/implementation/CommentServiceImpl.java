@@ -6,10 +6,7 @@ import com.bookshop.bookshop.model.Comment;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.User;
-import com.bookshop.bookshop.payload.ApiResponse;
-import com.bookshop.bookshop.payload.CommentRequest;
-import com.bookshop.bookshop.payload.CommentResponse;
-import com.bookshop.bookshop.payload.PagedResponse;
+import com.bookshop.bookshop.payload.*;
 import com.bookshop.bookshop.repository.CommentRepository;
 import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
@@ -97,7 +94,15 @@ public class CommentServiceImpl implements CommentService {
 
         User user = userRepository.findById(comment.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", comment.getCreatedBy()));
 
-        return ModelMapper.mapCommentToCommentResponse(comment, user);
+        Story story = comment.getStory();
+
+        User storyCreator = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("Story", "id", story.getCreatedBy()));
+
+        long loveCountOfStoryCreator = loveRepository.countByStoryId(story.getId());
+
+        StoryResponse storyResponse = ModelMapper.mapStoryToStoryResponse(story, storyCreator, loveCountOfStoryCreator);
+
+        return ModelMapper.mapCommentToCommentResponse(comment, user, storyResponse);
 
     }
 
@@ -115,7 +120,16 @@ public class CommentServiceImpl implements CommentService {
         Map<Long, User> creatorMap = getCreatorsIdsAncCreatorOfComments(comments.getContent());
 
         List<CommentResponse> commentResponses = comments.map(comment ->  {
-            return ModelMapper.mapCommentToCommentResponse(comment, creatorMap.get(comment.getCreatedBy()));
+
+            Story story = comment.getStory();
+
+            User creatorOfStory = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
+
+            long loveCountOfStoryCreator = loveRepository.countByStoryId(story.getId());
+
+            StoryResponse storyResponse = ModelMapper.mapStoryToStoryResponse(story, creatorOfStory, loveCountOfStoryCreator);
+
+            return ModelMapper.mapCommentToCommentResponse(comment, creatorMap.get(comment.getCreatedBy()), storyResponse);
         }).getContent();
 
 
@@ -137,7 +151,16 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<CommentResponse> commentResponses = comments.map(comment -> {
-            return ModelMapper.mapCommentToCommentResponse(comment, user);
+
+            Story story = comment.getStory();
+
+            User creatorOfStory = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
+
+            long loveCountOfStoryCreator = loveRepository.countByStoryId(story.getId());
+
+            StoryResponse storyResponse = ModelMapper.mapStoryToStoryResponse(story, creatorOfStory, loveCountOfStoryCreator);
+
+            return ModelMapper.mapCommentToCommentResponse(comment, user, storyResponse);
         }).getContent();
 
         return new PagedResponse<>(commentResponses, comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
@@ -160,7 +183,17 @@ public class CommentServiceImpl implements CommentService {
         }
 
         List<CommentResponse> commentResponses = comments.map(comment -> {
-            return ModelMapper.mapCommentToCommentResponse(comment, creatorMap.get(comment.getCreatedBy()));
+
+            Story story = comment.getStory();
+
+            User creatorOfStory = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
+
+            long loveCountOfStoryCreator= loveRepository.countByStoryId(story.getId());
+
+            StoryResponse storyResponse = ModelMapper.mapStoryToStoryResponse(story, creatorOfStory, loveCountOfStoryCreator);
+
+
+            return ModelMapper.mapCommentToCommentResponse(comment, creatorMap.get(comment.getCreatedBy()), storyResponse);
         }).getContent();
 
         return new PagedResponse<>(commentResponses, comments.getNumber(), comments.getSize(), comments.getTotalElements(), comments.getTotalPages(), comments.isLast());
@@ -182,7 +215,16 @@ public class CommentServiceImpl implements CommentService {
        List<Long> commentsIds = comments.map(Comment::getId).getContent();
 
        List<CommentResponse> commentResponses = comments.map(comment -> {
-           return ModelMapper.mapCommentToCommentResponse(comment, user);
+
+           Story story = comment.getStory();
+
+           User creatorOfStory = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
+
+           long loveCountOfStoryCreator = loveRepository.countByStoryId(story.getId());
+
+           StoryResponse storyResponse = ModelMapper.mapStoryToStoryResponse(story, creatorOfStory, loveCountOfStoryCreator);
+
+           return ModelMapper.mapCommentToCommentResponse(comment, user, storyResponse);
        }).getContent();
 
 
@@ -190,12 +232,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentResponse updateComment(CommentRequest commentRequest, Long commentId, UserPrincipal currentUser) {
+    public CommentResponse updateComment(CommentRequest commentRequest, Long commentId, Long storyId, UserPrincipal currentUser) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", commentId));
 
         User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
 
-
+        Story story = storyRepository.findById(storyId).orElseThrow(( ) -> new ResourceNotFoundException("Story" , "id", storyId));
 
         long creationId = user.getId();
 
@@ -205,7 +247,15 @@ public class CommentServiceImpl implements CommentService {
             comment.setBody(commentRequest.getBody());
             commentRepository.save(comment);
 
-            return ModelMapper.mapCommentToCommentResponse(comment,user );
+
+
+            User creatorOfStory = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
+
+            long loveCountOfStoryCreator = loveRepository.countByStoryId(story.getId());
+
+            StoryResponse storyResponse = ModelMapper.mapStoryToStoryResponse(story, creatorOfStory, loveCountOfStoryCreator);
+
+            return ModelMapper.mapCommentToCommentResponse(comment,user, storyResponse);
         } else {
             throw new BadRequestException("Sorry you not created this comment");
         }
