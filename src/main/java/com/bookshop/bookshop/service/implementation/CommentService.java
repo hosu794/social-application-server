@@ -30,6 +30,6 @@ public interface CommentService {
 
     public CommentResponse updateComment(CommentRequest commentRequest, Long commentId, Long storyId, UserPrincipal currentUser);
 
-    public Map<Long, User> getCreatorsIdsAncCreatorOfComments(List<Comment> comments);
+
 
 }

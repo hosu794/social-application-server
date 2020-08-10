@@ -23,10 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.management.modelmbean.ModelMBeanAttributeInfo;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +60,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(user);
         comment.setStory(story);
         comment.setBody(commentRequest.getBody());
+
 
         return commentRepository.save(comment);
 
@@ -247,8 +245,6 @@ public class CommentServiceImpl implements CommentService {
             comment.setBody(commentRequest.getBody());
             commentRepository.save(comment);
 
-
-
             User creatorOfStory = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
 
             long loveCountOfStoryCreator = loveRepository.countByStoryId(story.getId());
@@ -261,8 +257,8 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    @Override
-    public Map<Long, User> getCreatorsIdsAncCreatorOfComments(List<Comment> comments) {
+
+    private Map<Long, User> getCreatorsIdsAncCreatorOfComments(List<Comment> comments) {
 
         List<Long> creatorsIds = comments.stream().map(Comment::getCreatedBy).distinct().collect(Collectors.toList());
 
