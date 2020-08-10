@@ -12,6 +12,7 @@ import com.bookshop.bookshop.service.DBFileStorageService;
 import com.bookshop.bookshop.service.implementation.DBFileStorageServiceImpl;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
@@ -33,24 +34,37 @@ public class FileServiceTest {
 
     DBFileRepository dbFileRepository = Mockito.mock(DBFileRepository.class);
     DBFileStorageService dbFileStorageService = new DBFileStorageServiceImpl(dbFileRepository);
- 
 
-    @Test
-    public void should_return_store_avatar_method() throws Exception {
+    User user;
 
-        User user = new User();
+    UserPrincipal userPrincipal;
+    DBFile dbFile;
+
+    byte[] CDRIVES;
+
+    MockMultipartFile firstFile;
+    @Before
+    public void initialize() throws Exception {
+         user = new User();
         user.setId(344l);
         user.setUsername("hosu794");
         user.setPassword("password");
         user.setName("Grzegorz Szczęsny");
         user.setEmail("hosu794@gmail.com");
 
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
+         userPrincipal = UserPrincipal.create(user);
 
-        byte[] CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
-        DBFile dbFile = new DBFile("Example Filename", "image", CDRIVES);
+         CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
+         dbFile = new DBFile("Example Filename", "image", CDRIVES);
 
-        MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+         firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
+    }
+
+     @Test
+    public void should_return_store_avatar_method() throws Exception {
+
+
+
 
         Mockito.when(dbFileRepository.existsByFilename(ArgumentMatchers.anyString())).thenReturn(true);
         Mockito.when(dbFileRepository.findByFilename(ArgumentMatchers.anyString())).thenReturn(Optional.of(dbFile));
@@ -67,8 +81,7 @@ public class FileServiceTest {
     @Test
     public void should_return_getFileById() throws Exception {
 
-        byte[] CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
-        DBFile dbFile = new DBFile("Example Filename", "image", CDRIVES);
+
         Mockito.when(dbFileRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(dbFile));
 
         Assert.assertEquals(dbFile.getData(), dbFileStorageService.getFileById(434l).getData());
@@ -76,8 +89,7 @@ public class FileServiceTest {
 
     @Test
     public void should_return_getFileByFilename() throws Exception {
-        byte[] CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
-        DBFile dbFile = new DBFile("Example Filename", "image", CDRIVES);
+
 
         Mockito.when(dbFileRepository.findByFilename(ArgumentMatchers.anyString())).thenReturn(Optional.of(dbFile));
 
@@ -87,8 +99,7 @@ public class FileServiceTest {
 
     @Test
     public void should_return_getFileByFilename_and_return() throws Exception {
-        byte[] CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
-        DBFile dbFile = new DBFile("Example Filename", "image", CDRIVES);
+
 
         Mockito.when(dbFileRepository.findByFilename(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
 
