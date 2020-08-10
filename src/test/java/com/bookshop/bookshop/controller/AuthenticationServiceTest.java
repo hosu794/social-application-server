@@ -16,6 +16,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.assertj.core.api.AbstractAssert;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -49,12 +50,24 @@ public class AuthenticationServiceTest {
     AuthenticationService authenticationService = new AuthenticationServiceImpl(userRepository, roleRepository,
             passwordEncoder, authenticationManager ,jwtTokenProvider);
 
-    @Test
-    public void should_return_register_success() throws Exception {
+    Instant createdAt;
+    User user;
+    UserPrincipal userPrincipal;
+    Role role;
+    MockHttpServletRequest request;
+    SignUpRequest signUpRequest;
+    LoginRequest loginRequest;
+    String secret;
+    int mockExpirationTime;
+    Authentication authentication;
+    UpdateNameRequest updateNameRequest;
+    UpdatePasswordRequest updatePasswordRequest;
+    UpdateUsernameRequest updateUsernameRequest;
 
-
-        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
-        User user = new User();
+    @Before
+    public void initialize() throws Exception {
+         createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
+         user = new User();
         user.setPassword("Password");
         user.setId((long) 12);
         user.setUsername("Username");
@@ -62,23 +75,45 @@ public class AuthenticationServiceTest {
         user.setUpdatedAt(createdAt);
         user.setEmail("grzechu@gmail.com");
 
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
+         userPrincipal = UserPrincipal.create(user);
 
-        Role role = new Role(RoleName.ROLE_USER);
+         role = new Role(RoleName.ROLE_USER);
+
+         request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+         signUpRequest = new SignUpRequest();
+        signUpRequest.setName("Name");
+        signUpRequest.setUsername("Username");
+        signUpRequest.setPassword("Password");
+        signUpRequest.setEmail("email@gmail.com");
+
+         loginRequest = new LoginRequest();
+        loginRequest.setUsernameOrEmail(user.getUsername());
+        loginRequest.setPassword(user.getPassword());
+
+         secret = "tHIS_mEGO_SECRET_DONT_REGRET";
+         mockExpirationTime = 604800000;
+
+         authentication = Mockito.mock(Authentication.class);
+
+
+         updateNameRequest = new UpdateNameRequest("New Name");
+         updatePasswordRequest = new UpdatePasswordRequest("newpassword");
+
+         updateUsernameRequest = new UpdateUsernameRequest("newusername");
+    }
+
+
+
+    @Test
+    public void should_return_register_success() throws Exception {
 
         Mockito.when(passwordEncoder.encode(ArgumentMatchers.any(String.class))).thenReturn("Encode Password");
         Mockito.when(userRepository.existsByEmail(ArgumentMatchers.any(String.class))).thenReturn(false);
         Mockito.when(userRepository.existsByUsername(ArgumentMatchers.any(String.class))).thenReturn(false);
         Mockito.when(roleRepository.findByName(ArgumentMatchers.any(RoleName.class))).thenReturn(Optional.of(role));
         Mockito.when(userRepository.save(ArgumentMatchers.any(User.class))).thenReturn(user);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-        SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setName("Name");
-        signUpRequest.setUsername("Username");
-        signUpRequest.setPassword("Password");
-        signUpRequest.setEmail("email@gmail.com");
 
         Assert.assertNotNull(authenticationService.registerUser(signUpRequest));
         Assert.assertEquals(HttpStatus.CREATED, authenticationService.registerUser(signUpRequest).getStatusCode());
@@ -88,34 +123,9 @@ public class AuthenticationServiceTest {
     @Test
     public void should_generate_token() throws Exception {
 
-        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
-        User user = new User();
-        user.setPassword("Password");
-        user.setId((long) 12);
-        user.setUsername("Username");
-        user.setCreatedAt(createdAt);
-        user.setUpdatedAt(createdAt);
-        user.setEmail("grzechu@gmail.com");
-        user.setName("Beautiful Name");
-
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
-
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsernameOrEmail(user.getUsername());
-        loginRequest.setPassword(user.getPassword());
-
-        String secret = "tHIS_mEGO_SECRET_DONT_REGRET";
-        int mockExpirationTime = 604800000;
-
-        Authentication authentication = Mockito.mock(Authentication.class);
-
-
-
         Mockito.when(authenticationManager.authenticate(ArgumentMatchers.any())).thenReturn(authentication);
 
         Mockito.when(jwtTokenProvider.generateToken(ArgumentMatchers.any(Authentication.class))).thenReturn(generateMockToken(secret, mockExpirationTime, userPrincipal));
-
-
         Assert.assertEquals(HttpStatus.OK, authenticationService.authenticateUser(loginRequest).getStatusCode());
         Assert.assertNotNull(authenticationService.authenticateUser(loginRequest).getBody());
 
@@ -124,26 +134,12 @@ public class AuthenticationServiceTest {
     @Test
     public void should_return_updateName() throws Exception {
 
-        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
-        User user = new User();
-        user.setPassword("Password");
-        user.setId((long) 12);
-        user.setUsername("Username");
-        user.setCreatedAt(createdAt);
-        user.setUpdatedAt(createdAt);
-        user.setEmail("grzechu@gmail.com");
-        user.setName("Beautiful Name");
 
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
-
-        UpdateNameRequest updateNameRequest = new UpdateNameRequest("New Name");
 
         Mockito.when(userRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.of(user));
         Mockito.when(userRepository.existsByName(ArgumentMatchers.anyString())).thenReturn(false);
 
         user.setName(updateNameRequest.getName());
-
-
 
 
       Assert.assertEquals(200, authenticationService.updateName(userPrincipal, updateNameRequest).getStatusCodeValue());
@@ -152,18 +148,9 @@ public class AuthenticationServiceTest {
 
     @Test
     public void should_return_updatePassword() throws Exception {
-        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
-        User user = new User();
-        user.setPassword("Password");
-        user.setId((long) 12);
-        user.setUsername("Username");
-        user.setCreatedAt(createdAt);
-        user.setUpdatedAt(createdAt);
-        user.setEmail("grzechu@gmail.com");
-        user.setName("Beautiful Name");
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
 
-        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest("newpassword");
+
+
 
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
 
@@ -177,18 +164,9 @@ public class AuthenticationServiceTest {
 
     @Test
     public void should_return_updateUsername() throws Exception {
-        Instant createdAt = new SimpleDateFormat("yyyy-MM-dd").parse("2020-12-31").toInstant();
-        User user = new User();
-        user.setPassword("Password");
-        user.setId(434L);
-        user.setUsername("albert123");
-        user.setCreatedAt(createdAt);
-        user.setUpdatedAt(createdAt);
-        user.setEmail("example@example.com");
-        user.setName("Example name");
-        UserPrincipal userPrincipal = UserPrincipal.create(user);
 
-        UpdateUsernameRequest updateUsernameRequest = new UpdateUsernameRequest("newusername");
+
+
 
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
         Mockito.when(userRepository.existsByUsername(ArgumentMatchers.anyString())).thenReturn(false);
