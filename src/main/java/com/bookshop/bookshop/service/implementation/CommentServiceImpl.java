@@ -51,19 +51,22 @@ public class CommentServiceImpl implements CommentService {
 
     private static final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
 
-    public Comment createComment(CommentRequest commentRequest, UserPrincipal currentUser, Long storyId) {
+    public CommentResponse createComment(CommentRequest commentRequest, UserPrincipal currentUser, Long storyId) {
         User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
 
         Story story = storyRepository.findById(storyId).orElseThrow(() -> new ResourceNotFoundException("Story", "id", storyId));
+        User storyCreator = userRepository.findById(story.getCreatedBy()).orElseThrow(() -> new ResourceNotFoundException("User", "id", story.getCreatedBy()));
+        long loveCountOfStoryCreator = loveRepository.countByStoryId(story.getId());
+        StoryResponse storyResponse = ModelMapper.mapStoryToStoryResponse(story, storyCreator , loveCountOfStoryCreator);
 
         Comment comment = new Comment();
         comment.setUser(user);
         comment.setStory(story);
         comment.setBody(commentRequest.getBody());
 
+        Comment createdComment = commentRepository.save(comment);
 
-        return commentRepository.save(comment);
-
+        return ModelMapper.mapCommentToCommentResponse(createdComment, user, storyResponse);
     }
 
     @Override
