@@ -146,6 +146,8 @@ public class CommentServiceTest {
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(user));
         Mockito.when(storyRepository.findById(ArgumentMatchers.anyLong())).thenReturn(Optional.of(story));
         Mockito.when(commentRepository.save(ArgumentMatchers.any(Comment.class))).thenReturn(comment);
+        Mockito.when(loveRepository.countByStoryId(ArgumentMatchers.anyLong())).thenReturn(23l);
+        
 
         Assert.assertEquals(commentService.createComment(commentRequest, userPrincipal, story.getId()).getBody(), comment.getBody());
 

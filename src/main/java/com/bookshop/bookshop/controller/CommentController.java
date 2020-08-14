@@ -42,12 +42,8 @@ public class CommentController {
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest commentRequest, @CurrentUser UserPrincipal currentUser) {
-        Comment comment =  commentService.createComment(commentRequest, currentUser, commentRequest.getStoryId());
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{commentId}").buildAndExpand(comment.getId()).toUri();
-
-        return ResponseEntity.created(location).body(new ApiResponse(true, "Comment Created Successfully"));
+    public CommentResponse createComment(@Valid @RequestBody CommentRequest commentRequest, @CurrentUser UserPrincipal currentUser) {
+        return commentService.createComment(commentRequest, currentUser, commentRequest.getStoryId());
     }
 
     @GetMapping("/username/{username}")

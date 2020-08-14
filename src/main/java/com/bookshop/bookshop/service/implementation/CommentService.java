@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface CommentService {
 
-    public Comment createComment(CommentRequest commentRequest, UserPrincipal currentUser, Long storyId);
+    public CommentResponse createComment(CommentRequest commentRequest, UserPrincipal currentUser, Long storyId);
 
     public ResponseEntity<?> deleteComment(Long commentId, UserPrincipal currentUser);
 
