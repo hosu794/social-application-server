@@ -52,33 +52,48 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public ResponseEntity<?> chargePremium(PaymentRequest chargeRequest, UserPrincipal currentUser) throws StripeException {
 
+        String chargeId = createCharge(chargeRequest);
+
+        return validateCharge(chargeId, currentUser);
+
+    }
+
+    private ResponseEntity<?> validateUser(UserPrincipal currentUser) {
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+        if(user.isPremium()) {
+            throw new BadRequestException("User already has a premium account");
+        } else {
+            user.setPremium(true);
+            userRepository.save(user);
+
+            return ResponseEntity.ok(new ApiResponse(true, "Account set to the premium successfully"));
+        }
+    }
+
+    private ResponseEntity<?> validateCharge(String charge, UserPrincipal currentUser) {
+        if(charge != null) {
+
+
+            User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
+
+
+            return validateUser(currentUser);
+
+
+        } else {
+            throw new BadRequestException("Please check the credit card details entered");
+        }
+    }
+
+    private String createCharge(PaymentRequest chargeRequest) throws StripeException {
         Map<String, Object> chargeParams = new HashMap<>();
         chargeParams.put("amount", chargeRequest.getAmount());
         chargeParams.put("currency", PaymentRequest.Currency.INR);
         chargeParams.put("source", chargeRequest.getToken().getId());
 
         Charge charge = Charge.create(chargeParams);
-        String chargeId = charge.getId();
-
-        if(charge != null) {
-
-            User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
-
-            if(user.isPremium()) {
-                throw new BadRequestException("User already has a premium account");
-            } else {
-                user.setPremium(true);
-                userRepository.save(user);
-
-                return ResponseEntity.ok(new ApiResponse(true, "Account set to the premium successfully"));
-            }
-
-        } else {
-            throw new BadRequestException("Please check the credit card details entered");
-        }
-
-
+        return charge.getId();
     }
-
 
 }
