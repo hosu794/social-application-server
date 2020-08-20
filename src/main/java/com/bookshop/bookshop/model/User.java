@@ -46,6 +46,8 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String password;
 
+    private boolean premium;
+
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
@@ -93,6 +95,13 @@ public class User extends DateAudit {
     }
 
 
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public void setPremium(boolean premium) {
+        this.premium = premium;
+    }
 
     public Long getId() {
         return id;

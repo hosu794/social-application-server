@@ -1,6 +1,8 @@
 package com.bookshop.bookshop.controller;
 
 import com.bookshop.bookshop.payload.PaymentRequest;
+import com.bookshop.bookshop.security.CurrentUser;
+import com.bookshop.bookshop.security.UserPrincipal;
 import com.bookshop.bookshop.service.implementation.PaymentServiceImpl;
 import com.stripe.exception.StripeException;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,14 @@ public class PaymentController {
         return chargeId!=null? new ResponseEntity<String>(chargeId,HttpStatus.OK):
                 new ResponseEntity<String>("Please check the credit card details entered", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/premium")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> chargePremium(@RequestBody PaymentRequest request, @CurrentUser UserPrincipal currentUser) throws StripeException {
+        System.out.println(request.getAmount());
+        return paymentService.chargePremium(request, currentUser);
+    }
+
 
     @ExceptionHandler
     public String handleError(StripeException ex) {
