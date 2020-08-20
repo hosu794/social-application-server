@@ -38,16 +38,6 @@ public class PaymentServiceImpl implements PaymentService {
         Stripe.apiKey = secretKey;
     }
 
-    @Override
-    public String charge(PaymentRequest chargeRequest) throws StripeException {
-        Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", chargeRequest.getAmount());
-        chargeParams.put("currency", PaymentRequest.Currency.INR);
-        chargeParams.put("source", chargeRequest.getToken().getId());
-
-        Charge charge = Charge.create(chargeParams);
-        return charge.getId();
-    }
 
     @Override
     public ResponseEntity<?> chargePremium(PaymentRequest chargeRequest, UserPrincipal currentUser) throws StripeException {
@@ -58,7 +48,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     }
 
-    private ResponseEntity<?> validateUser(UserPrincipal currentUser) {
+    @Override
+    public ResponseEntity<?> validateUser(UserPrincipal currentUser) {
         User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
 
         if(user.isPremium()) {
@@ -71,7 +62,8 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-    private ResponseEntity<?> validateCharge(String charge, UserPrincipal currentUser) {
+    @Override
+    public ResponseEntity<?> validateCharge(String charge, UserPrincipal currentUser) {
         if(charge != null) {
 
 
@@ -86,7 +78,8 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-    private String createCharge(PaymentRequest chargeRequest) throws StripeException {
+    @Override
+    public String createCharge(PaymentRequest chargeRequest) throws StripeException {
         Map<String, Object> chargeParams = new HashMap<>();
         chargeParams.put("amount", chargeRequest.getAmount());
         chargeParams.put("currency", PaymentRequest.Currency.INR);

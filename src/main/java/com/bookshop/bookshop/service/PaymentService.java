@@ -7,8 +7,14 @@ import org.springframework.http.ResponseEntity;
 
 public interface PaymentService {
 
-    public String charge(PaymentRequest chargeRequest) throws StripeException;
+
 
     public ResponseEntity<?> chargePremium(PaymentRequest chargeRequest, UserPrincipal currentUser) throws StripeException;
+
+    public ResponseEntity<?> validateUser(UserPrincipal currentUser);
+
+    public ResponseEntity<?> validateCharge(String charge, UserPrincipal currentUser);
+
+    public String createCharge(PaymentRequest chargeRequest) throws StripeException;
 
 }
