@@ -40,7 +40,7 @@ Motivation to create this project was a desire to train my coding java coding sk
 
 ## Features
 
-- Add comments feature
+- add chat feature between users
 
 
 ## Status
