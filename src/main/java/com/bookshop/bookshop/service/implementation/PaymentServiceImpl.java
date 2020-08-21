@@ -65,14 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public ResponseEntity<?> validateCharge(String charge, UserPrincipal currentUser) {
         if(charge != null) {
-
-
-            User user = userRepository.findById(currentUser.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", currentUser.getId()));
-
-
             return validateUser(currentUser);
-
-
         } else {
             throw new BadRequestException("Please check the credit card details entered");
         }
