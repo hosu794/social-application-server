@@ -9,6 +9,7 @@ public class UserSummary {
     private boolean premium;
 
     public UserSummary(Long id, String username, String name, boolean premium) {
+        this.name = name;
         this.id = id;
         this.username = username;
         this.premium = premium;

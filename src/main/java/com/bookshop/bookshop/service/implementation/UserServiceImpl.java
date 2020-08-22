@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
                     .toUriString();
             return new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName(), fileDownloadUri, currentUser.isPremium());
         } else {
-            return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
+           return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName(), currentUser.isPremium());
         }
 
     }
