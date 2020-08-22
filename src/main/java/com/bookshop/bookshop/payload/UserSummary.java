@@ -6,6 +6,21 @@ public class UserSummary {
     private String username;
     private String name;
     private String avatarDownloadUri;
+    private boolean premium;
+
+    public UserSummary(Long id, String username, String name, boolean premium) {
+        this.id = id;
+        this.username = username;
+        this.premium = premium;
+    }
+
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public void setPremium(boolean premium) {
+        this.premium = premium;
+    }
 
     public String getAvatarDownloadUri() {
         return avatarDownloadUri;
@@ -43,6 +58,14 @@ public class UserSummary {
         this.id = id;
         this.username = username;
         this.name = name;
+    }
+
+    public UserSummary(Long id, String username, String name, String avatarDownloadUri, boolean premium) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+        this.avatarDownloadUri = avatarDownloadUri;
+        this.premium = premium;
     }
 
     public UserSummary(Long id, String username, String name, String avatarDownloadUri) {

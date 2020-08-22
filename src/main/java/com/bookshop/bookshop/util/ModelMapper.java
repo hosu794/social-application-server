@@ -21,13 +21,11 @@ public class ModelMapper {
         storyResponse.setTitle(story.getTitle());
         storyResponse.setCreationDateTime(story.getCreatedAt());
         storyResponse.setDescription(story.getDescription());
-        UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
+        UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName(), creator.isPremium());
         storyResponse.setCreatedBy(creatorSummary);
         storyResponse.setTotalLoves(userLove);
         TopicResponse topicResponse = ModelMapper.mapTopicToTopicResponse(story.getTopic(), creator);
         storyResponse.setTopic(topicResponse);
-
-
 
         return storyResponse;
 
@@ -39,7 +37,7 @@ public class ModelMapper {
         topicResponse.setId(topic.getId());
         topicResponse.setTitle(topic.getTitle());
         topicResponse.setDescription(topic.getDescription());
-        UserSummary userSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
+        UserSummary userSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName(), creator.isPremium());
         topicResponse.setCreatedBy(userSummary);
         topicResponse.setcreatedAt(topic.getCreatedAt());
 
@@ -52,7 +50,7 @@ public class ModelMapper {
         commentResponse.setBody(comment.getBody());
         commentResponse.setCreationDateTime(comment.getCreatedAt());
         commentResponse.setStoryResponse(story);
-        UserSummary userSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName());
+        UserSummary userSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName(), creator.isPremium());
         commentResponse.setCreatedBy(userSummary);
 
         return commentResponse;

@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
                     .path("/api/downloadFile/")
                     .path(String.valueOf(foundFile.getId()))
                     .toUriString();
-            return new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName(), fileDownloadUri);
+            return new UserSummary(currentUser.getId(),currentUser.getUsername(), currentUser.getName(), fileDownloadUri, currentUser.isPremium());
         } else {
             return new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
         }
