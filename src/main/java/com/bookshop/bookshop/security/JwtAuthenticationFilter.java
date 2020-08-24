@@ -18,14 +18,13 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public JwtAuthenticationFilter() {
-        this.customUserDetailsService = customUserDetailsService;
-        this.tokenProvider = jwtTokenProvider;
-    }
+    public JwtAuthenticationFilter() {}
 
-    private final JwtTokenProvider tokenProvider;
+    @Autowired
+    private  JwtTokenProvider tokenProvider;
 
-    private final CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private  CustomUserDetailsService customUserDetailsService;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
