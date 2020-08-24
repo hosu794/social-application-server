@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.service.implementation;
 
 import com.bookshop.bookshop.exception.BadRequestException;
+import com.bookshop.bookshop.exception.PremiumContentException;
 import com.bookshop.bookshop.exception.ResourceNotFoundException;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
@@ -368,6 +369,17 @@ public class StoryServiceImpl implements StoryService {
         loveRepository.delete(love);
         long totalLoves = loveRepository.countByStoryId(story.getId());
         return ModelMapper.mapStoryToStoryResponse(story, creator, totalLoves);
+    }
+
+    public void hasUserPremium(UserPrincipal currentUser, Story story) {
+
+        boolean hasUserHasPremium = currentUser.isPremium();
+        boolean hasStoryPremiumContent = currentUser.isPremium();
+
+       if(!hasUserHasPremium && !hasStoryPremiumContent || !hasUserHasPremium && hasStoryPremiumContent ) {
+           throw new PremiumContentException("You have to have a premium account to see this story");
+       }
+
     }
 
 
