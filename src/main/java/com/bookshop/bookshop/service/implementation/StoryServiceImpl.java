@@ -1,6 +1,7 @@
 package com.bookshop.bookshop.service.implementation;
 
 import com.bookshop.bookshop.exception.BadRequestException;
+import com.bookshop.bookshop.exception.PremiumContentException;
 import com.bookshop.bookshop.exception.ResourceNotFoundException;
 import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
@@ -180,6 +181,7 @@ public class StoryServiceImpl implements StoryService {
 
         Story story = new Story();
         story.setTopic(topic);
+        story.setPremiumContent(storyRequest.isPremiumContent());
         story.setBody(storyRequest.getBody());
         story.setDescription(storyRequest.getDescription());
         story.setTitle(storyRequest.getTitle());
@@ -368,6 +370,8 @@ public class StoryServiceImpl implements StoryService {
         long totalLoves = loveRepository.countByStoryId(story.getId());
         return ModelMapper.mapStoryToStoryResponse(story, creator, totalLoves);
     }
+
+
 
 
 

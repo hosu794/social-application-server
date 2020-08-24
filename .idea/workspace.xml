@@ -23,7 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c22b08ab-0f57-46d5-883e-59ce298e03fb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bookshop/bookshop/exception/FileUploadExceptionAdvice.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bookshop/bookshop/service/implementation/StoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bookshop/bookshop/service/implementation/StoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/bookshop/bookshop/controller/StoryServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/bookshop/bookshop/controller/StoryServiceTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +68,7 @@
       <recent name="com.bookshop.bookshop.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.BookShopApplication">
+  <component name="RunManager" selected="JUnit.StoryServiceTest.should_return_create_method">
     <configuration name="BookShopApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.bookshop.bookshop.BookShopApplication" />
       <module name="book-shop" />
@@ -111,22 +113,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PaymentServiceTest.should_return_createCharge_method" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="book-shop" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.bookshop.bookshop.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.bookshop.bookshop.controller" />
-      <option name="MAIN_CLASS_NAME" value="com.bookshop.bookshop.controller.PaymentServiceTest" />
-      <option name="METHOD_NAME" value="should_return_createCharge_method" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="PaymentServiceTest.should_return_validateCharge" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="book-shop" />
       <extension name="coverage">
@@ -143,13 +129,29 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="StoryServiceTest.should_return_create_method" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="book-shop" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.bookshop.bookshop.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.bookshop.bookshop.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.bookshop.bookshop.controller.StoryServiceTest" />
+      <option name="METHOD_NAME" value="should_return_create_method" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.StoryServiceTest.should_return_create_method" />
         <item itemvalue="Application.BookShopApplication" />
         <item itemvalue="JUnit.PaymentServiceTest" />
         <item itemvalue="JUnit.PaymentServiceTest.should_return_chargePremium" />
         <item itemvalue="JUnit.PaymentServiceTest.should_return_validateCharge" />
-        <item itemvalue="JUnit.PaymentServiceTest.should_return_createCharge_method" />
       </list>
     </recent_temporary>
   </component>
@@ -195,10 +197,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1597047595044" />
-    <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser" timestamp="1598253113268">
+    <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser" timestamp="1598255809649">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598253113268" />
+    <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598255809649" />
     <state x="765" y="236" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1598077829875" />
     <state x="709" y="389" width="514" height="268" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1597848042119">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -222,29 +224,29 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="229" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1597844192344" />
-    <state width="1877" height="325" key="GridCell.Tab.0.bottom" timestamp="1598253424181">
+    <state width="1877" height="325" key="GridCell.Tab.0.bottom" timestamp="1598256171724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1594382197397" />
-    <state width="1877" height="325" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598253424181" />
+    <state width="1877" height="325" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598256171724" />
     <state width="1877" height="228" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1598106302545" />
-    <state width="1877" height="325" key="GridCell.Tab.0.center" timestamp="1598253424181">
+    <state width="1877" height="325" key="GridCell.Tab.0.center" timestamp="1598256171724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="249" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1594382197397" />
-    <state width="1877" height="325" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598253424181" />
+    <state width="1877" height="325" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598256171724" />
     <state width="1877" height="228" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1598106302545" />
-    <state width="1877" height="325" key="GridCell.Tab.0.left" timestamp="1598253424181">
+    <state width="1877" height="325" key="GridCell.Tab.0.left" timestamp="1598256171724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="249" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1594382197397" />
-    <state width="1877" height="325" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598253424181" />
+    <state width="1877" height="325" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598256171724" />
     <state width="1877" height="228" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1598106302545" />
-    <state width="1877" height="325" key="GridCell.Tab.0.right" timestamp="1598253424181">
+    <state width="1877" height="325" key="GridCell.Tab.0.right" timestamp="1598256171724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1877" height="249" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1594382197397" />
-    <state width="1877" height="325" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598253424181" />
+    <state width="1877" height="325" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598256171724" />
     <state width="1877" height="228" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1598106302545" />
     <state width="1877" height="228" key="GridCell.Tab.1.bottom" timestamp="1598106302545">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -288,11 +290,11 @@
     </state>
     <state x="616" y="240" width="672" height="677" key="run.anything.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1597910765755" />
     <state x="616" y="240" width="672" height="677" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598001617330" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1598253397052">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1598258400418">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="-1297" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1920.1040@-1920.0.1920.1040" timestamp="1594382430571" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598253397052" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598258400418" />
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598105507482" />
   </component>
   <component name="XDebuggerManager">
