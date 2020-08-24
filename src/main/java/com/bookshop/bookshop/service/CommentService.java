@@ -1,4 +1,4 @@
-package com.bookshop.bookshop.service.implementation;
+package com.bookshop.bookshop.service;
 
 import com.bookshop.bookshop.model.Comment;
 import com.bookshop.bookshop.model.User;

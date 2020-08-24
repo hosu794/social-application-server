@@ -26,8 +26,11 @@ import java.net.URI;
 @RequestMapping("/api/stories")
 public class StoryController {
 
-    @Autowired
-    private StoryServiceImpl storyService;
+    public StoryController(StoryServiceImpl storyService) {
+        this.storyService = storyService;
+    }
+
+    private final StoryServiceImpl storyService;
 
     private static final Logger logger = LoggerFactory.getLogger(StoryController.class);
 

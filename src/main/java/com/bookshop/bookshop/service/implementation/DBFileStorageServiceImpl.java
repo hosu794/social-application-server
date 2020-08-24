@@ -23,14 +23,15 @@ import java.util.Optional;
 @Transactional
 public class DBFileStorageServiceImpl implements DBFileStorageService {
 
-    @Autowired
+
     public DBFileStorageServiceImpl(DBFileRepository dbFileRepository) {
         this.dbFileRepository = dbFileRepository;
     }
 
+    final private DBFileRepository dbFileRepository;
+
     final private static Logger logger = LoggerFactory.getLogger(DBFileStorageServiceImpl.class);
 
-    final private DBFileRepository dbFileRepository;
 
     public DBFile storeAvatar(MultipartFile file, UserPrincipal currentUser) {
 

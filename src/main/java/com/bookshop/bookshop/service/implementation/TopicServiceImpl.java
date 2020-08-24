@@ -32,17 +32,18 @@ public class TopicServiceImpl implements TopicService {
 
     private static final Logger logger = LoggerFactory.getLogger(TopicServiceImpl.class);
 
-    @Autowired
+
     public TopicServiceImpl(TopicRepository topicRepository, UserRepository userRepository) {
         this.topicRepository = topicRepository;
         this.userRepository = userRepository;
     }
 
-    public TopicServiceImpl() {}
+    private final TopicRepository topicRepository;
+    private final UserRepository userRepository;
 
 
-    private TopicRepository topicRepository;
-   private UserRepository userRepository;
+
+
 
     public PagedResponse<TopicResponse> getAllTopics(UserPrincipal currentUser, int page, int size) {
         ValidatePageUtil.validatePageNumberAndSize(page, size);

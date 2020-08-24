@@ -28,14 +28,12 @@ public class FileController {
     private static final Logger logger = LoggerFactory
             .getLogger(FileController.class);
 
-    @Autowired
+
     public FileController(DBFileStorageServiceImpl dbFileStorageService) {
         this.dbFileStorageService = dbFileStorageService;
     }
 
-
     final private DBFileStorageServiceImpl dbFileStorageService;
-
 
     @PutMapping("/uploadAvatar")
     @PreAuthorize("hasRole('USER')")

@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class UserController {
 
-    @Autowired
-    private UserServiceImpl userService;
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    private final UserServiceImpl userService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 

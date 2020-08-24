@@ -1,29 +1,28 @@
 package com.bookshop.bookshop.controller;
 
-import com.bookshop.bookshop.model.Comment;
 import com.bookshop.bookshop.payload.*;
 import com.bookshop.bookshop.security.CurrentUser;
 import com.bookshop.bookshop.security.UserPrincipal;
-import com.bookshop.bookshop.service.implementation.CommentService;
 import com.bookshop.bookshop.service.implementation.CommentServiceImpl;
 import com.bookshop.bookshop.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
 
-    @Autowired
-    private CommentServiceImpl commentService;
+    public CommentController(CommentServiceImpl commentService) {
+        this.commentService = commentService;
+    }
+
+
+    private final CommentServiceImpl commentService;
 
     private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
