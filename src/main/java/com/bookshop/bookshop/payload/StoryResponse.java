@@ -14,6 +14,7 @@ public class StoryResponse {
     private String body;
     private String description;
     private Collection<Comment> comments;
+    private boolean premiumContent;
 
     private UserSummary createdBy;
     private Instant creationDateTime;
@@ -21,6 +22,14 @@ public class StoryResponse {
     private TopicResponse topic;
 
     private Long totalLoves;
+
+    public boolean isPremiumContent() {
+        return premiumContent;
+    }
+
+    public void setPremiumContent(boolean premiumContent) {
+        this.premiumContent = premiumContent;
+    }
 
     public Long getId() {
         return id;

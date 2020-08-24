@@ -17,10 +17,29 @@ public class StoryRequest {
 
     private String description;
 
+    private boolean premiumContent;
+
     public StoryRequest(String title, String body, String description) {
         this.title = title;
         this.body = body;
         this.description = description;
+    }
+
+    public StoryRequest() {}
+
+    public StoryRequest(String title, String body, String description, boolean premiumContent) {
+        this.title = title;
+        this.body = body;
+        this.description = description;
+        this.premiumContent = premiumContent;
+    }
+
+    public boolean isPremiumContent() {
+        return premiumContent;
+    }
+
+    public void setPremiumContent(boolean premiumContent) {
+        this.premiumContent = premiumContent;
     }
 
     public String getTitle() {

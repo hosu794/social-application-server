@@ -180,6 +180,7 @@ public class StoryServiceImpl implements StoryService {
 
         Story story = new Story();
         story.setTopic(topic);
+        story.setPremiumContent(storyRequest.isPremiumContent());
         story.setBody(storyRequest.getBody());
         story.setDescription(storyRequest.getDescription());
         story.setTitle(storyRequest.getTitle());

@@ -21,6 +21,7 @@ public class ModelMapper {
         storyResponse.setTitle(story.getTitle());
         storyResponse.setCreationDateTime(story.getCreatedAt());
         storyResponse.setDescription(story.getDescription());
+        storyResponse.setPremiumContent(story.isPremiumContent());
         UserSummary creatorSummary = new UserSummary(creator.getId(), creator.getUsername(), creator.getName(), creator.isPremium());
         storyResponse.setCreatedBy(creatorSummary);
         storyResponse.setTotalLoves(userLove);

@@ -44,6 +44,8 @@ public class Story extends UserDateAudit {
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
 
+    private boolean premiumContent;
+
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Love> loves;
 
@@ -62,9 +64,40 @@ public class Story extends UserDateAudit {
         this.description = description;
     }
 
+    public Story(Long id, @Length(min = 5, message = "*Your title must at least 5 characters") @NotEmpty(message = "*Please provide title") String title, String body, @NotEmpty(message = "*Please provide the description") String description, Topic topic, boolean premiumContent) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.description = description;
+        this.topic = topic;
+        this.premiumContent = premiumContent;
+    }
+
+    public Story(Long id, @Length(min = 5, message = "*Your title must at least 5 characters") @NotEmpty(message = "*Please provide title") String title, String body, @NotEmpty(message = "*Please provide the description") String description, Topic topic) {
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.description = description;
+        this.topic = topic;
+    }
+
     public Story() {}
 
+    public boolean isPremiumContent() {
+        return premiumContent;
+    }
 
+    public void setPremiumContent(boolean premiumContent) {
+        this.premiumContent = premiumContent;
+    }
+
+    public List<Love> getLoves() {
+        return loves;
+    }
+
+    public void setLoves(List<Love> loves) {
+        this.loves = loves;
+    }
 
     public Topic getTopic() {
         return topic;
