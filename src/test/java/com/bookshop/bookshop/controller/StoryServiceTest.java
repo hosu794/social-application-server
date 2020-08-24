@@ -371,9 +371,11 @@ public class StoryServiceTest {
     public void should_return_create_method() throws Exception {
         Topic topic  = new Topic("Topic Name", "Topic Description");
         Story story = new Story("Story Title", "Story Body", "Description");
+        story.setPremiumContent(true);
         story.setTopic(topic);
         User user = new User("Antek Karwasz", "karwasz123", "karwasz@gmail.com", "password");
         StoryRequest storyRequest = new StoryRequest(story.getTitle(), story.getBody(), story.getDescription());
+        storyRequest.setPremiumContent(story.isPremiumContent());
         when(topicRepository.findById(any(Long.class))).thenReturn(Optional.of(topic));
         when(storyRepository.save(any(Story.class))).thenReturn(story);
         Assert.assertTrue(storyService.createStory(storyRequest, (long) 1).getTitle().contains(story.getTitle()));
@@ -381,6 +383,7 @@ public class StoryServiceTest {
         Assert.assertTrue(storyService.createStory(storyRequest, (long) 1).getDescription().contains(story.getDescription()));
         Assert.assertTrue(storyService.createStory(storyRequest, (long) 23).getTopic().getDescription().contains(topic.getDescription()));
         Assert.assertTrue(storyService.createStory(storyRequest, (long) 23).getTopic().getTitle().contains(topic.getTitle()));
+        Assert.assertEquals(storyService.createStory(storyRequest, 12l).isPremiumContent(), true);
     }
 
     @Test

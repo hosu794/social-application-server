@@ -371,21 +371,7 @@ public class StoryServiceImpl implements StoryService {
         return ModelMapper.mapStoryToStoryResponse(story, creator, totalLoves);
     }
 
-    public void hasUserPremium(UserPrincipal currentUser, Story story) {
 
-        boolean hasUserPremium = currentUser.isPremium();
-        boolean hasStoryPremiumContent = currentUser.isPremium();
-
-        boolean isUserHasPremiumAndHasStoryPremiumContent = hasUserPremium && hasStoryPremiumContent;
-        boolean isHasUserPremiumAndHasStoryPremiumContent = !hasUserPremium && hasStoryPremiumContent;
-        boolean isPremium = !isUserHasPremiumAndHasStoryPremiumContent || isHasUserPremiumAndHasStoryPremiumContent;
-
-        
-       if(isPremium) {
-           throw new PremiumContentException("You have to have a premium account to see this story");
-       }
-
-    }
 
 
 
