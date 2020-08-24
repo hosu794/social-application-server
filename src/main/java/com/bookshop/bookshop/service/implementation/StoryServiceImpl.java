@@ -373,10 +373,15 @@ public class StoryServiceImpl implements StoryService {
 
     public void hasUserPremium(UserPrincipal currentUser, Story story) {
 
-        boolean hasUserHasPremium = currentUser.isPremium();
+        boolean hasUserPremium = currentUser.isPremium();
         boolean hasStoryPremiumContent = currentUser.isPremium();
 
-       if(!hasUserHasPremium && !hasStoryPremiumContent || !hasUserHasPremium && hasStoryPremiumContent ) {
+        boolean isUserHasPremiumAndHasStoryPremiumContent = hasUserPremium && hasStoryPremiumContent;
+        boolean isHasUserPremiumAndHasStoryPremiumContent = !hasUserPremium && hasStoryPremiumContent;
+        boolean isPremium = !isUserHasPremiumAndHasStoryPremiumContent || isHasUserPremiumAndHasStoryPremiumContent;
+
+        
+       if(isPremium) {
            throw new PremiumContentException("You have to have a premium account to see this story");
        }
 
