@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional

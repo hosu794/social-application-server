@@ -33,8 +33,11 @@ import java.util.Collections;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationServiceImpl authenticationService;
+    public AuthenticationController(AuthenticationServiceImpl authenticationService) {
+        this.authenticationService = authenticationService;
+    }
+
+    private final AuthenticationServiceImpl authenticationService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

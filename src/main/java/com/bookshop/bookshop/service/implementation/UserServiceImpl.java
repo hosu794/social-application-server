@@ -34,8 +34,6 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-
-    @Autowired
     public UserServiceImpl(UserRepository userRepository, StoryRepository storyRepository, LoveRepository loveRepository, StoryService storyService, DBFileStorageServiceImpl dbFileStorageService) {
         this.userRepository = userRepository;
         this.storyRepository = storyRepository;
@@ -45,11 +43,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    UserRepository userRepository;
-    StoryRepository storyRepository;
-    LoveRepository loveRepository;
-    StoryService storyService;
-    DBFileStorageServiceImpl dbFileStorageService;
+    private final UserRepository userRepository;
+    private final StoryRepository storyRepository;
+    private final LoveRepository loveRepository;
+    private final StoryService storyService;
+    private final DBFileStorageServiceImpl dbFileStorageService;
 
 
     @Override

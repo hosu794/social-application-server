@@ -3,7 +3,6 @@ package com.bookshop.bookshop.service.implementation;
 import com.bookshop.bookshop.exception.BadRequestException;
 import com.bookshop.bookshop.exception.ResourceNotFoundException;
 import com.bookshop.bookshop.model.Comment;
-import com.bookshop.bookshop.model.Love;
 import com.bookshop.bookshop.model.Story;
 import com.bookshop.bookshop.model.User;
 import com.bookshop.bookshop.payload.*;
@@ -12,6 +11,7 @@ import com.bookshop.bookshop.repository.LoveRepository;
 import com.bookshop.bookshop.repository.StoryRepository;
 import com.bookshop.bookshop.repository.UserRepository;
 import com.bookshop.bookshop.security.UserPrincipal;
+import com.bookshop.bookshop.service.CommentService;
 import com.bookshop.bookshop.util.ModelMapper;
 import com.bookshop.bookshop.util.ValidatePageUtil;
 import org.slf4j.Logger;
@@ -28,13 +28,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
+
     public CommentServiceImpl(UserRepository userRepository, CommentRepository commentRepository, StoryRepository storyRepository, LoveRepository loveRepository) {
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;

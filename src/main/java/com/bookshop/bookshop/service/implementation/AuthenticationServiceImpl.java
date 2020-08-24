@@ -30,7 +30,7 @@ import java.util.Collections;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Autowired
+
     public AuthenticationServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
                                      PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
@@ -40,11 +40,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    UserRepository userRepository;
-    RoleRepository roleRepository;
-    PasswordEncoder passwordEncoder;
-    JwtTokenProvider jwtTokenProvider;
-    AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
     @Override
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
